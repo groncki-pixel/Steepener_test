@@ -38,18 +38,32 @@
 
 ---
 
-## Data Tracked in Spreadsheet
+## Data File: `data steepener.xlsx`
 
-| Column | Description |
-|--------|-------------|
-| `CL1` | WTI crude oil front-month futures ($/bbl) |
-| `US2Y` | US 2-year Treasury yield |
-| `US2Y Breakeven` | 2-year breakeven inflation rate |
-| `US Core CPI` | US core CPI (ex food & energy) |
-| `US10Y` | US 10-year Treasury yield |
-| `Fed Balance Sheet` | Federal Reserve total assets (proxy for QT pace) |
-| `US10Y Breakeven` | 10-year breakeven inflation rate |
-| `US2Y10Y Spread` | 2s10s yield curve spread (trade P&L driver) |
+The spreadsheet contains daily time series data sourced from Bloomberg, organized across the following sheets. Most series cover approximately 5 years of history (mid-2021 to March 2026).
+
+### Sheet-by-Sheet Reference
+
+| Sheet Name | Fields | Date Range | Frequency | Data Points | Description |
+|------------|--------|------------|-----------|-------------|-------------|
+| **CL1** | Date, Last Price, Open Interest, SMAVG(15) | 2021-02-24 → 2026-03-17 | Daily | 1,280 | **WTI crude oil front-month futures** ($/bbl). The primary driver of the headline inflation channel. Last Price is the settlement price; Open Interest tracks speculative/hedging activity; SMAVG(15) is the 15-day simple moving average for trend smoothing. |
+| **UST 2 y** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 2-year Treasury yield** (%). The front leg of the steepener trade. Most sensitive to changes in Fed policy expectations. A decline here = trade is working on the front end. |
+| **US 2 year breakeven** | Date, Last Price | 2020-09-15 → 2026-03-16 | Daily | 1,371 | **US 2-year breakeven inflation rate** (%). Derived from 2Y nominal yield minus 2Y TIPS real yield. Reflects the market's near-term inflation expectations — this is what should spike on oil but is expected to fade if the conflict is short-lived. |
+| **US Core CPI** | Date, Last Price | 2021-03-31 → 2026-01-31 | Monthly | 59 | **US Core CPI YoY** (%). Excludes food and energy. The thesis hinges on oil hitting headline CPI but *not* core — this series is the evidence. Published with ~1 month lag. |
+| **UST 10 y** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 10-year Treasury yield** (%). The back leg of the steepener trade. Expected to rise on fiscal deficit expansion, increased Treasury issuance, and QT expectations. |
+| **FED Balance sheet** | *(placeholder)* | — | — | — | **Federal Reserve total assets** ($bn). Intended to be pulled from FRED. Tracks the pace of quantitative tightening — a shrinking balance sheet means less demand for duration, pushing long-end yields higher. |
+| **US 10yr breakeven** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 10-year breakeven inflation rate** (%). Reflects longer-term inflation expectations. If 10Y BE rises faster than 2Y BE, the market is pricing inflation as a persistent (not transitory) risk — relevant for monitoring narrative shifts. |
+| **US 2yr10yr spread** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 2s10s yield curve spread** (bp). Calculated as 10Y yield minus 2Y yield. **This is the direct P&L driver of the trade.** Entry at ~50bp, target 70bp, stop loss 42bp. Positive values = normal/steep curve. |
+| **ACM 10yr premium** | Date, Last Price | 2021-03-17 → 2026-03-12 | Daily | 1,245 | **Adrian-Crump-Moench 10-year term premium** (%). Estimated by the NY Fed. Decomposes the 10Y yield into rate expectations + risk compensation. A rising term premium supports the steepener thesis by confirming the back-end selloff is driven by structural supply/fiscal concerns, not just rate expectations. |
+| **Sheet5** | — | — | — | — | Empty / unused. |
+| **← Raw** | — | — | — | — | Empty / unused placeholder for raw data. |
+
+### Key Relationships to Monitor
+
+- **CL1 vs US 2yr breakeven:** Oil price pass-through to near-term inflation expectations (MS: +35bp headline CPI per 10% oil increase)
+- **US 2yr breakeven vs US 10yr breakeven:** If the gap widens (10Y rising faster), inflation is being seen as persistent — risk to the thesis
+- **UST 2y vs US Core CPI:** If core CPI stays flat while 2Y yields spike, the front-end is mispriced — supports the trade
+- **US 2yr10yr spread vs ACM 10yr premium:** If the spread widens alongside rising term premium, the steepening is structural (supply/fiscal) not just rate expectations — strongest confirmation signal
 
 ## Recommended Additional Data Series
 
