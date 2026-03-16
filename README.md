@@ -115,10 +115,152 @@ To make the thesis more quantitatively rigorous, consider adding:
 
 ---
 
-## Key Quantitative Checks to Run
+## Quantitative Analysis (`analysis.py`)
 
-1. **Regression: Oil price changes → 2s10s spread** over past conflicts (Gulf War, Libya 2011, Russia-Ukraine 2022). Does the curve steepen?
-2. **Event study: NFP misses → front-end rally magnitude.** How much does the 2Y rally on a large NFP miss historically?
-3. **Compare current SOFR OIS pricing vs. realized Fed path** in analogous episodes (2022 oil shock + weak growth). How far off was the market?
-4. **Term premium decomposition:** Plot ACM term premium for 2Y vs 10Y. If 10Y term premium is rising while 2Y is flat/falling, the structural steepener is confirmed.
-5. **Breakeven spread (10Y BE minus 2Y BE):** If this is widening, the market sees inflation as a long-duration risk, supporting back-end cheapening.
+We ran three analyses on 5 years of daily data (March 2021 – March 2026) to stress-test the thesis. Each one asks a specific question about a different piece of the trade. Below is the plain-English version of what each one does and why it matters, followed by the detailed technical breakdown and results.
+
+---
+
+### Analysis 1: Oil-Curve Asymmetry — "Does oil going up actually steepen the curve?"
+
+#### The Simple Story
+
+The most obvious version of our trade would be: "oil goes up → inflation fears → 2-year yields spike → but 10-year yields spike more → curve steepens." We tested this directly. We looked at every week over the past 5 years, measured how much oil moved, and checked whether the 2s10s spread widened in response.
+
+**The answer is: not really.** The direct statistical link between weekly oil moves and the 2s10s spread is essentially zero (R² = 0.0005, p = 0.71). Oil going up does push both the 2-year and 10-year yields higher, but by almost the same amount — the 10Y is only 1.1x more sensitive than the 2Y. During oil spike weeks (>5% weekly move), the spread actually *tightened* by about 1bp on average.
+
+**Why this is actually good for the thesis:** It tells us the steepener is NOT a naive "oil goes up, curve steepens" bet. If it were, every macro tourist would be in the trade already and it would be priced in. Instead, the steepening mechanism works through two *indirect* channels that the market hasn't fully connected yet — the term premium channel (Analysis 2) and the transitory inflation channel (Analysis 3). The fact that oil alone doesn't steepen the curve is what creates the opportunity: the market sees oil → inflation → rates higher across the board, but it's missing the nuance that the *type* of pressure is different at each end of the curve.
+
+#### The Detailed Version
+
+**Methodology:** Weekly (Friday-to-Friday) percentage changes in WTI front-month (CL1) regressed against weekly basis-point changes in the 2s10s spread (UST 10Y minus UST 2Y). Sample: 260 weekly observations. We also ran separate regressions of oil on each leg individually (2Y yield and 10Y yield), and split the sample into "oil spike" regimes (weekly oil move > +5%) versus normal weeks.
+
+**Results:**
+
+| Regression | β | R² | p-value | Interpretation |
+|-----------|---|-----|---------|---------------|
+| Oil → 2s10s spread | +0.04 bp per 1% oil | 0.0005 | 0.71 | No significant direct relationship |
+| Oil → 2Y yield | +0.0043% per 1% oil | — | 0.008 | 2Y responds to oil (significant) |
+| Oil → 10Y yield | +0.0047% per 1% oil | — | 0.002 | 10Y responds to oil (significant) |
+
+Both legs respond to oil with statistical significance, but by nearly identical magnitudes — so the *spread* between them doesn't move. During the 30 oil spike weeks in our sample, the average spread change was -1.0bp (slight flattening), compared to -0.2bp in normal weeks. The 2Y and 10Y each rose by ~5-6bp on average during spike weeks.
+
+**Implication for the trade:** Oil is the catalyst that gets the market's attention, but it is not the mechanism that steepens the curve. Oil creates the *conditions* — headline inflation fear, fiscal spending on military operations, uncertainty about the Fed — and those conditions then flow through the term premium (Analysis 2) and inflation expectations channels (Analysis 3) to produce the steepening. This is a second-order trade, not a first-order one, which is why it's mispriced.
+
+---
+
+### Analysis 2: Term Premium Decomposition — "Is the 10Y selloff structural or just rate expectations?"
+
+#### The Simple Story
+
+When 10-year yields go up, there are two possible reasons: (1) the market thinks the Fed will keep rates higher for longer ("rate expectations"), or (2) investors are demanding extra compensation for the *risk* of holding long-dated bonds — things like fiscal uncertainty, Treasury supply gluts, and general nervousness about locking up money for a decade ("term premium").
+
+This distinction is everything for the trade. If 10Y yields are rising because of rate expectations, that tends to *flatten* the curve (because 2Y yields rise even more — they're closer to the Fed). But if 10Y yields are rising because of term premium, that *steepens* the curve (because term premium lives almost entirely in the long end).
+
+We used the NY Fed's ACM model to decompose the 10Y yield into these two pieces. **The results are the strongest in the entire analysis:**
+
+- Over the last 6 months, 43% of the 10Y yield increase came from rising term premium — that's the structural, fiscal/supply-driven component.
+- When term premium rises by 1bp, the 2s10s spread widens by a massive 32.8bp. This is statistically bulletproof (t-statistic of 18.6).
+- When rate expectations rise by 1bp, the spread actually *narrows* by 12.9bp. This is the flattener that everyone is used to from hiking cycles.
+
+**The punchline:** The market narrative right now is "rates staying higher for longer" — a rate expectations story that should flatten the curve. But under the surface, a huge chunk of the 10Y move is actually term premium, which steepens it. The war is accelerating the term premium story: more deficit spending, more Treasury issuance, more uncertainty about Warsh's approach to QT. As this becomes the dominant narrative (away from "Fed on hold" and toward "who is going to buy all these bonds?"), the curve steepens toward our 70bp target.
+
+#### The Detailed Version
+
+**Methodology:** The Adrian-Crump-Moench (ACM) term premium model, published daily by the NY Fed, estimates the portion of the 10Y yield that compensates investors for duration risk versus the portion that reflects expected future short-term rates. We define:
+
+- **Term premium** = ACM 10Y term premium (directly observed in data)
+- **Rate expectations** = 10Y yield minus ACM term premium (residual)
+
+We ran a multivariate regression: daily change in 2s10s spread = α + β₁ × Δ(rate expectations) + β₂ × Δ(term premium) + ε. Sample: 1,245 daily observations.
+
+**Results:**
+
+| Component | β (bp impact on spread per 1bp change) | t-statistic | Significance |
+|-----------|----------------------------------------|-------------|-------------|
+| Rate expectations | -12.94 | -6.57 | Highly significant — flattener |
+| Term premium | +32.85 | +18.64 | Highly significant — steepener |
+| R² = 0.343 | | | |
+
+**Current decomposition (as of March 12, 2026):**
+
+| Component | Level | Last 6M Change | Share of 10Y Move |
+|-----------|-------|-----------------|-------------------|
+| 10Y yield | 4.261% | +22.3bp | 100% |
+| Term premium | 0.681% | +9.7bp | 43% |
+| Rate expectations | 3.580% | +12.6bp | 57% |
+
+The 90-day rolling correlation between term premium changes and spread changes has been persistently positive and trending higher, while the correlation between rate expectation changes and spread changes has been negative — meaning the two forces are pulling in opposite directions, and term premium is winning.
+
+**Implication for the trade:** The steepener is fundamentally a bet on term premium continuing to rise. The catalysts are all in place: war-driven fiscal expansion (more bond supply), Warsh's appointment creating uncertainty about QT policy, and the Supreme Court tariff ruling blowing a hole in expected revenues. Each of these is structural and slow-moving — they don't reverse overnight. This gives the trade a durable tailwind rather than relying on a single event.
+
+---
+
+### Analysis 3: Breakeven Divergence — "Does the market actually think oil inflation is temporary?"
+
+#### The Simple Story
+
+The biggest risk to the trade is that oil inflation becomes *persistent* — that it leaks from gasoline prices into rents, wages, and services, forcing the Fed to keep hiking rather than cutting. If that happens, 2-year yields would keep rising and the front leg of the trade blows up.
+
+So we need to check: does the bond market think oil inflation is a temporary spike, or the start of something that sticks around? We can measure this by comparing 2-year breakeven inflation (what the market expects inflation to average over the next 2 years) with 10-year breakeven inflation (what it expects over 10 years).
+
+If oil inflation is temporary, 2-year breakevens should spike (because oil affects the near term) but 10-year breakevens should barely move (because a 6-month oil shock is a rounding error over a decade). That's exactly what we find:
+
+- **2-year breakevens are 2.6x more sensitive to oil than 10-year breakevens.** During oil spike weeks specifically, they're 3.7x more sensitive.
+- The "breakeven slope" (10Y BE minus 2Y BE) is currently **-0.81%**, sitting at the **13th percentile** of its 5-year history. A deeply negative number means the market is pricing in *higher* inflation in the short run than the long run — the textbook definition of "transitory."
+
+**Why this matters for the trade:** If the market believes oil inflation is transitory, then the Fed doesn't need to respond aggressively. Powell can (and likely will) use the word "transitory" at the March 18 meeting, just like he did during the 2022 oil shock. That gives him cover to focus on the weak labor market instead, keeping rate cuts on the table. Warsh, who takes over in May, will care even less about a temporary oil shock. So the front end rallies — 2-year yields come down — and we get paid on that leg of the steepener.
+
+Meanwhile, the back end doesn't benefit from the "transitory" story at all, because the forces pushing 10Y yields higher (deficits, issuance, term premium) have nothing to do with oil and everything to do with structural fiscal deterioration. The two legs are driven by *different things*, which is exactly the asymmetry we're trading.
+
+#### The Detailed Version
+
+**Methodology:** Weekly percentage changes in WTI regressed against weekly changes in 2Y breakeven and 10Y breakeven separately. We also computed the "breakeven slope" (10Y BE minus 2Y BE) as a daily time series and analyzed its historical distribution and co-movement with oil.
+
+**Results — Oil Sensitivity:**
+
+| Series | β (% change per 1% oil move) | R² | p-value |
+|--------|-------------------------------|-----|---------|
+| 2Y breakeven | +0.0149 | 0.258 | <0.0001 |
+| 10Y breakeven | +0.0057 | 0.175 | <0.0001 |
+| **Ratio** | **2.6x** | | |
+
+Both are statistically significant — oil does move inflation expectations across the curve. But the short end moves 2.6x more, confirming that oil is priced as a near-term, not permanent, inflation driver.
+
+**During oil spike weeks (>+5% weekly move, n=30):**
+
+| Series | Avg Weekly Change |
+|--------|-------------------|
+| 2Y breakeven | +12.0bp |
+| 10Y breakeven | +3.2bp |
+| **Ratio** | **3.7x** |
+
+The asymmetry is even more pronounced during large oil moves — precisely the regime we're entering now with the Iran conflict pushing WTI from ~$74 to ~$94.
+
+**Breakeven Slope Analysis:**
+
+| Metric | Value |
+|--------|-------|
+| Current 10Y BE - 2Y BE | -0.808% |
+| Historical percentile | 13th |
+| Interpretation | Deeply inverted — market prices near-term inflation well above long-term |
+
+A negative breakeven slope means the TIPS market is pricing in inflation that is *front-loaded and temporary*. At the 13th percentile, the current reading is more inverted than 87% of the last 5 years. This is the market screaming "transitory" — and it gives the Fed all the cover it needs to look through the oil shock and focus on employment.
+
+**Implication for the trade:** This analysis directly de-risks the front leg. The market is not just hoping oil inflation is transitory — it has priced it as such, strongly and consistently. The 2Y yield spike we've seen is driven by headline fear and narrative ("inflation is back!"), but the breakeven market — where real money is actually positioned — is telling a different story. As the headline narrative fades and the data confirms what breakevens already show (core PCE continuing to decline, oil effects washing out within 3 months per MS research), the 2Y yield should come back down, and the front leg of the steepener pays off.
+
+---
+
+### How The Three Analyses Fit Together
+
+Think of it as a chain:
+
+1. **Analysis 1** eliminates the naive thesis. Oil doesn't mechanically steepen the curve — if you just go "oil up, steepener on," you get nothing. This clears the field of the obvious trade.
+
+2. **Analysis 2** provides the engine for the back leg. The 10Y is being pushed higher by term premium — fiscal deficits, bond supply, QT uncertainty — not by rate expectations. This is structural and persistent. It doesn't need oil to continue. It just needs the government to keep spending money it doesn't have (which the war guarantees).
+
+3. **Analysis 3** provides the engine for the front leg. Oil inflation is temporary — the market already knows it, breakevens confirm it. So the Fed can cut, Warsh will cut, and 2Y yields come down.
+
+**The steepener works not because oil makes the curve steep, but because oil creates two *different* pressures at two *different* points on the curve that push in the same direction for our trade.** The front end gets relief (transitory inflation → rate cuts), the back end gets punished (deficits → supply → term premium). The spread widens from 50bp toward 70bp.
+
+This is why the market hasn't fully priced it: the simple "oil = inflation = rates up everywhere" story dominates the narrative, but it misses the second-order dynamics that actually determine where on the curve the pressure lands.
