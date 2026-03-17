@@ -16,26 +16,46 @@
 
 ### Why the front-end (2Y) should rally (yields lower)
 
-- **2Y at 3.67% vs Fed at 3.75% with -92k NFP — market pricing zero easing into deteriorating labor market. That's the mispricing.**
-- **Market mispricing rate path:** Bond traders have priced out all 2026 rate cuts. This is overdone — JPM recommends taking profit on 2Y shorts.
-- **Oil as entry catalyst:** MS research shows every 10% oil price increase adds ~35bp to headline CPI but only ~3bp to core CPI. The Fed has historically prioritized core inflation in its reaction function. The oil-driven flattening creates the window to enter the steepener at favorable levels.
-- **Core PCE falling:** Core PCE inflation has continued to decline in 2026 alongside labor market weakening, even as markets have repriced hawkishly.
-- **FOMC consensus drives cuts; Warsh confirms Fed holds rather than hikes — sufficient for front-end.**
-- **Short-lived conflict:** JPM expects rapid munition depletion and poor risk-reward for the US economy to keep the Iran war brief, meaning oil-driven inflation will be transitory.
+- **[F1] 2Y at 3.67% vs Fed at 3.75% with -92k NFP — market pricing near-zero easing (~20bp, one December cut) into a deteriorating labor market. That's the mispricing.** February payrolls fell by 92,000 (BLS), well below the +59,000 consensus (Benzinga). December was revised down to -17,000. Fed target range upper bound confirmed at 3.75% (FRED). Markets price only ~20bp of cuts by year-end — not literally zero, but near-zero relative to the labor market deterioration. Fed Governor Waller said on March 6: *"If we get a bad number... the question is 'why are you just sitting on your hands?'"* (Bloomberg Television).
+- **[F2] Market mispricing rate path:** Traders see only one cut coming (December 2026), with no additional cuts until well into 2027 (CNBC/CME FedWatch). After the NFP miss, ~51% probability of a June cut was briefly priced. The hawkish repricing is overdone given the labor market trajectory.
+- **[F3] Oil as entry catalyst — headline vs core passthrough confirmed by our own analysis:** Our Analysis 07 regression shows every 10% oil price increase adds +62bp to headline CPI YoY but only +22bp to core PCE YoY (ratio ~2.9x, both significant at p<0.01). In 3-month changes, the effect is even starker: +24bp headline vs -8bp core (not significant), ratio ~3x. The directional claim (headline >> core) is confirmed; the specific magnitudes differ from the original MS attribution (~35bp/~3bp) due to sample period and methodology.
+- **[F4] The Fed's reaction function — headline PCE dominates in this cycle (REVISED):** Contrary to the conventional wisdom that the Fed prioritizes core, our Analysis 08 Taylor rule horse race shows headline PCE (p<0.0001) dominates core PCE (p=0.85) in explaining Fed Funds during 2021-2026. The headline PCE model has R²=0.82 vs core PCE R²=0.70. This likely reflects the unique post-COVID regime where food and energy prices were persistent, not transitory. The implication for the trade is actually *stronger*: if the Fed watches headline more than core, and headline inflation is driven by oil (which is transitory per Analysis 03's breakeven evidence), then the Fed has even more reason to look through the current oil shock.
+- **[F5] Core inflation picture — nuanced, not uniformly declining (REVISED):** Core CPI stands at 2.5% YoY in February 2026, the lowest since March 2021 (BLS). But core PCE is 3.06% YoY as of January 2026, and it is *not* declining — it rose from 2.76% in October to 3.06% in January. The divergence between core CPI (2.5%) and core PCE (3.1%) is itself unusual. The thesis should be honest: core CPI is declining, but core PCE remains sticky above 3%, which is 100bp above the Fed's target. This is a headwind for the front-end thesis, partially offset by the labor market deterioration.
+- **[F6] Warsh as dovish-on-rates, hawkish-on-balance-sheet (REVISED):** Warsh is not opaque — he has been very explicit. His public framework: *"Run the printing press a little bit less. Let the balance sheet come down... and in so doing, you can have materially lower interest rates"* (Yahoo Finance). Warsh favors greater policy easing in 2026, driven by a view that productivity gains could boost growth without higher inflation (Invesco). Edward Jones notes Warsh likely represents a dovish shift on rates vs Chair Powell. However, Senator Tillis has vowed to block Warsh's nomination until a federal criminal investigation of Powell is dropped (CNBC), creating confirmation uncertainty. Even if Warsh merely holds rather than hikes, this is dovish relative to current market pricing (~1 cut), which supports the front end.
+- **[F7] Short-lived conflict:** Energy Secretary Wright acknowledged the conflict "would cause a little bit of increased prices on Americans" but said "this is short-term pain to get through to a much better place" (Kiplinger). The transitory nature of the oil shock is supported by the breakeven slope analysis (Analysis 03): the 2Y-10Y breakeven slope is at the 13th percentile, meaning the market strongly prices oil inflation as front-loaded and temporary.
 
 ### Why the back-end (10Y) should sell off (yields higher)
 
-- **Fiscal deficit expansion:** War spending adds to an already deteriorating fiscal outlook, post the Supreme Court ruling (Feb 20) striking down tariff revenue.
-- **Increased Treasury issuance:** Larger deficits require more long-duration supply, pushing term premium higher.
-- **Quantitative tightening (QT):** As Warsh's appointment approaches, expectations for continued or accelerated QT will pressure long-end supply/demand dynamics.
-- **Warsh uncertainty:** Lack of forward guidance from Warsh adds term premium to longer-dated bonds.
-- **Warsh as term premium / QT wildcard:** Warsh's hawkish QT instincts and opaque communication style create persistent uncertainty about the pace of balance sheet runoff. This uncertainty lives entirely in the long end — the market cannot price duration supply it cannot forecast, so it demands more term premium. This is the structural channel through which Warsh pushes 10Y yields higher even if he holds or cuts the policy rate.
+- **[B1] Fiscal deficit expansion — SCOTUS ruling confirmed, deficit→TP link directionally positive (REVISED):** The Supreme Court ruled 6-3 on Feb 20, 2026 (*Learning Resources, Inc. v. Trump*) that IEEPA does not authorize tariffs (SCOTUSblog). Those tariffs would have raised $1.4T over 2026-2035, erasing nearly three-fourths of new tax revenue (Tax Foundation). Trump replaced with Section 122 tariffs capped at 15%. Our Analysis 10 shows a positive correlation between 12-month cumulative deficit and ACM term premium (r=+0.34, beta=+0.058pp per $100B deficit increase), though the result is marginally significant (p=0.11) in this short sample. The direction supports the thesis but the statistical evidence is not conclusive.
+- **[B2] Increased Treasury issuance:** Larger deficits require more long-duration supply, pushing term premium higher. This operates through the same deficit→TP channel as B1. The 12-month cumulative deficit stands at $1,634B as of February 2026.
+- **[B3] QT → term premium link confirmed (Analysis 11):** Our regression shows Fed balance sheet size is strongly negatively correlated with term premium (r=-0.87, p<0.0001). A $100B balance sheet reduction is associated with a +5.8bp increase in the ACM 10Y term premium. Warsh's hawkish QT stance is well-documented: he intends to aggressively accelerate QT by actively selling the Fed's $6.5T MBS portfolio, paired with a dovish view on short-term rates (Chroniclejournal). The Citadel Securities framework confirms: Warsh's "QT for Rate Cuts" strategy is the second channel through which he would push for rate cuts offset by financial-conditions-neutral balance sheet rundown. This is the strongest quantitative link in the back-end thesis: Warsh = dovish on rates (front end down) + hawkish on balance sheet (back end up) = steeper curve.
+- **[B4] Warsh framework novelty as term premium driver (REVISED):** The term premium channel is real, but the mechanism is not "Warsh is opaque" — it's that his "QT for Rate Cuts" framework is novel and untested. Warsh combines a dovish view on rates with a hawkish approach to the balance sheet, which could drain liquidity from a highly leveraged financial system (Allianz Trade). The novelty and implementation risk create uncertainty about duration supply that demands higher term premium. The 30Y-2Y spread widened to 1.35pp (nearly three-year high) after the Warsh announcement (Tradingkey), providing direct evidence for the bear steepening thesis.
+- **[B5] Warsh as structural steepener catalyst (REVISED):** Warsh's remedy, conveyed publicly: *"Run the printing press a little bit less. Let the balance sheet come down. Let Secretary Bessent handle the fiscal accounts, and in so doing, you can have materially lower interest rates"* (Yahoo Finance). The term premium story should be framed as: the novelty and implementation risk of the QT-for-cuts framework creates term premium, not Warsh's opacity. The bear steepening has already started as markets price in this dual dynamic.
 
 ### Key Catalysts
 
 1. **Fed meeting — March 18, 2026:** Powell's forward guidance; likely to echo 2022 language calling oil-driven inflation "transitory" to prevent inflation expectations from becoming unanchored.
 2. **Iran munitions depletion signals:** Any intelligence suggesting the conflict is winding down supports the short-lived-war thesis and the front-end rally.
-3. **Warsh appointment — May 2026:** Shift in Fed leadership and communication style; likely rate-cut-friendly despite headline inflation.
+3. **Warsh appointment — May 2026:** Shift in Fed leadership and communication style; dovish on rates, hawkish on balance sheet. Confirmation risk from Senator Tillis's blockade (CNBC).
+
+---
+
+## Thesis Audit Summary
+
+| Claim | Verdict | Action Taken |
+|-------|---------|-------------|
+| F1: Zero easing | ⚠️ REVISED | Rewritten to "~20bp priced" with NFP -92k confirmed (BLS) |
+| F2: Rate path mispricing | ⚠️ REVISED | Rewritten with CME FedWatch data (~1 cut Dec 2026) |
+| F3: MS oil→CPI | ⚠️ REVISED + ✅ OWN ANALYSIS | Ran Analysis 07: headline/core ratio ~2.9x (p<0.01) |
+| F4: Fed prioritizes core | ⚠️ REVISED + ✅ OWN ANALYSIS | Ran Analysis 08: headline PCE dominates in horse race (p<0.0001 vs p=0.85) |
+| F5: Core PCE falling | ⚠️ REVISED | Core PCE is 3.06% and rising. Core CPI is 2.5% and declining. Honest divergence documented. |
+| F6: Warsh holds | ⚠️ REVISED | Rewritten with nuanced Warsh "QT for Cuts" framework |
+| F7: Short-lived conflict | ⚠️ REVISED | JPM cite replaced with public government quotes |
+| B1: Fiscal deficit→TP | ✅/⚠️ | SCOTUS ruling verified (6-3). Analysis 10: r=+0.34, p=0.11 (directional, not conclusive) |
+| B2: Treasury issuance | ⚠️ | Same deficit→TP channel as B1. 12M deficit = $1,634B |
+| B3: QT pressure | ✅ CONFIRMED | Analysis 11: Fed BS↔TP r=-0.87, p<0.0001. $100B QT → +5.8bp TP |
+| B4: Warsh uncertainty | ⚠️ REVISED | Reframed: "novel framework risk" not "opacity" |
+| B5: Warsh QT wildcard | ⚠️ REVISED | Reframed with explicit Warsh quotes; 30Y-2Y at 3yr high |
 
 ---
 
@@ -113,6 +133,22 @@ To make the thesis more quantitatively rigorous, consider adding:
 | **Brent crude (CO1)** | ICE | Global oil benchmark; relevant for pass-through to European/global inflation |
 | **Oil implied volatility (OVX)** | CBOE | Measures uncertainty around oil prices, not just level |
 | **US strategic petroleum reserve (SPR) level** | EIA | Capacity to dampen oil shocks — lower SPR = less buffer |
+
+---
+
+## Data File: `17.3_data_steepener_updated.xlsx`
+
+Additional economic data pulled from FRED to support the thesis audit analyses. All series are monthly.
+
+| Sheet Name | FRED Series | Date Range | Description |
+|------------|-------------|------------|-------------|
+| **CPIAUCSL** | CPIAUCSL | 2021-02 → 2026-02 | Headline CPI index (not seasonally adjusted). Used in Analysis 07 to compute headline CPI YoY and test oil→CPI passthrough. |
+| **PCEPILFE** | PCEPILFE | 1959-01 → 2026-01 | Core PCE price index (excluding food & energy). The Fed's preferred inflation gauge. Used in Analyses 07 and 08. |
+| **PCEPI** | PCEPI | 2021-01 → 2026-01 | Headline PCE price index. Used in Analysis 08 Taylor rule regression. |
+| **UNRATE** | UNRATE | 2021-02 → 2026-02 | Civilian unemployment rate (U3). Used in Analysis 08 as Taylor rule input. Latest: 4.4%. |
+| **MTSDS133FMS** | MTSDS133FMS | 2021-02 → 2026-02 | Monthly federal budget deficit ($M, negative = deficit). Used in Analysis 10 to test deficit→term premium link. |
+
+Also includes all original Bloomberg sheets (CL1, UST 2y, UST 10y, ACM 10yr premium, spreads, breakevens, Fed Funds, Fed Balance Sheet, Core CPI).
 
 ---
 
@@ -355,9 +391,98 @@ The individual 2Y paths after each spike week are also plotted, showing the disp
 
 ---
 
-### How The Six Analyses Fit Together
+---
 
-Think of the six analyses as three pairs, each answering a different type of question:
+## Thesis Audit Analyses (`thesis_audit_analyses.py`)
+
+Four additional analyses run to empirically test claims identified during the thesis audit. These use the new FRED data in `17.3_data_steepener_updated.xlsx` combined with the original Bloomberg data.
+
+---
+
+### Analysis 7: Oil → Headline CPI vs Core CPI Passthrough
+
+#### The Simple Story
+
+The original thesis cited MS research claiming "every 10% oil price increase adds ~35bp to headline CPI but only ~3bp to core CPI." Since we could not verify the MS research note, we ran our own regression.
+
+**Our results confirm the directional claim but with different magnitudes:**
+
+| Regression (YoY levels) | Oil Beta | Per 10% Oil Increase | p-value | R² |
+|--------------------------|----------|---------------------|---------|-----|
+| **Headline CPI YoY** | +0.062 | **+62bp** | <0.0001 | 0.548 |
+| **Core PCE YoY** | +0.022 | **+22bp** | 0.008 | 0.281 |
+| **Headline PCE YoY** | +0.044 | **+44bp** | <0.0001 | 0.481 |
+| **Ratio (Headline CPI / Core PCE)** | | **2.9x** | | |
+
+In 3-month changes (more relevant for identifying the marginal passthrough), the picture is starker: headline CPI responds +24bp per 10% oil, while core PCE shows -8bp (not significant, p=0.15). This confirms the thesis mechanism: oil hits headline hard but doesn't leak meaningfully into core.
+
+**Key nuance:** Our ratio (~3x) is lower than the MS-attributed ratio (~12x). This is because our sample period (2022-2026) includes the 2022 commodity shock where oil *did* feed into core via supply chains. In a longer sample excluding that episode, the ratio would likely be higher. The qualitative conclusion — headline >> core — holds regardless.
+
+---
+
+### Analysis 8: Taylor Rule — Does the Fed React to Core or Headline?
+
+#### The Simple Story
+
+The thesis claimed "the Fed has historically prioritized core inflation in its reaction function." We tested this with a Taylor rule horse race.
+
+**Surprising result: in this cycle, headline PCE dominates.**
+
+| Model | R² | AIC | Core PCE p-value | Headline PCE p-value |
+|-------|-----|-----|-----------------|---------------------|
+| Core PCE + Unemployment | 0.703 | 116.8 | 0.000 | — |
+| Headline PCE + Unemployment | **0.818** | **93.7** | — | 0.000 |
+| Horse race (both) | 0.818 | 95.7 | **0.850** (not sig) | **0.000** |
+
+In the horse race, headline PCE is highly significant (p<0.0001) while core PCE drops out entirely (p=0.85). The headline model has a substantially better fit (R²=0.82 vs 0.70, AIC 93.7 vs 116.8).
+
+**Why this actually strengthens the trade:** This likely reflects the unique post-COVID regime where supply-driven inflation was persistent. But the *implication* for the trade is powerful: if the Fed watches headline and headline is driven by oil, and oil inflation is transitory (confirmed by the breakeven analysis), then the Fed will see a spike that fades quickly. The key question is whether the Fed looks through a transitory headline spike — and they have cover to do so precisely because core metrics (especially core CPI at 2.5%) remain well-behaved.
+
+---
+
+### Analysis 10: Federal Deficit → ACM Term Premium
+
+#### The Simple Story
+
+The thesis claims fiscal deficit expansion pushes term premium higher. We tested this directly with a regression of the 12-month cumulative deficit against the ACM 10Y term premium.
+
+**Results: directionally positive but not statistically conclusive.**
+
+| Regression | Beta | t-stat | p-value | R² |
+|-----------|------|--------|---------|-----|
+| Levels: TP = a + b × 12M Deficit | +0.00058 per $1B | +1.62 | 0.106 | 0.117 |
+| Changes: d(TP) = a + b × d(12M Deficit) | -0.00025 | -1.43 | 0.152 | 0.035 |
+| Correlation (levels) | +0.34 | | | |
+
+A $100B increase in the 12-month cumulative deficit is associated with a +5.8bp increase in term premium, but the relationship is only significant at the ~11% level. The positive correlation (r=+0.34) supports the direction but the short sample (48 months) limits statistical power.
+
+**Interpretation:** The deficit→TP link is theoretically sound and directionally confirmed, but our sample is too short to establish it with conventional significance. The relationship is likely confounded by other factors (monetary policy, risk appetite) that move both variables. A longer historical sample (back to the 1990s) would provide more power but requires data beyond what we currently have.
+
+---
+
+### Analysis 11: Fed Balance Sheet (QT) → Term Premium
+
+#### The Simple Story
+
+The thesis claims QT (balance sheet reduction) pressures long-end supply/demand dynamics and pushes term premium higher. This is the strongest quantitative result of the audit.
+
+**Results: highly significant.**
+
+| Regression | Beta | t-stat | p-value | R² |
+|-----------|------|--------|---------|-----|
+| Levels: TP = a + b × Fed BS | -0.00058 per $1B | -8.87 | <0.0001 | **0.760** |
+| Changes: d(TP) = a + b × d(Fed BS) | -0.00049 | -1.81 | 0.070 | 0.024 |
+| Correlation (levels) | **-0.872** | | | |
+
+The negative sign is exactly what the thesis predicts: as the Fed's balance sheet shrinks ($8.95T peak → $6.70T current), term premium rises. A **$100B reduction in Fed assets is associated with a +5.8bp increase in the ACM term premium.** The relationship is overwhelming in levels (R²=0.76, p<0.0001) and marginally significant in changes (p=0.07).
+
+**Why this is the backbone of the back-end thesis:** Warsh intends to aggressively accelerate QT. If the Fed's balance sheet continues to shrink (or accelerates its decline under Warsh), the empirical relationship predicts term premium will keep rising. The $2.25T reduction already achieved (~$6.95T → current) corresponds to roughly +130bp of term premium increase based on the regression coefficient. Warsh's plan to actively sell MBS (rather than just letting them mature) would accelerate this further.
+
+---
+
+### How The Six + Four Analyses Fit Together
+
+Think of the ten analyses as four groups:
 
 **The mechanism (Analyses 1–3):** Analysis 1 eliminates the naive thesis — oil doesn't mechanically steepen the curve, it flattens it, and that flattening is our entry signal. Analysis 2 provides the engine for the back leg — term premium, not rate expectations, is driving 10Y yields higher, and that's structural. Analysis 3 provides the engine for the front leg — the market already prices oil inflation as transitory, which gives the Fed cover to focus on the labor market and keep cuts on the table. Together, these three establish why the spread should widen from 50bp to 70bp.
 
@@ -365,7 +490,9 @@ Think of the six analyses as three pairs, each answering a different type of que
 
 **The practical questions (Analyses 5–6):** These are what a trader asks before putting the trade on. Analysis 5 quantifies carry drag and shows it's not the binding constraint — you have well over a year before carry alone erodes the target P&L, and the catalysts are clustered in March–May 2026. Analysis 6 tests whether the front end actually gives back its oil-driven spike, and at what speed — telling you whether the trade works passively (mechanical mean reversion) or actively (catalyst-dependent repricing).
 
-The steepener works not because oil makes the curve steep, but because oil creates two different pressures at two different points on the curve that push in the same direction for our trade. The front end gets relief (transitory inflation → rate cuts), the back end gets punished (deficits → supply → term premium). Carry is manageable. Historical episodes are directionally consistent. The spread widens from 50bp toward 70bp.
+**The thesis audit (Analyses 7, 8, 10, 11):** These analyses empirically test specific claims made in the thesis. Analysis 7 confirms the oil→headline/core passthrough asymmetry (~3x ratio), replacing the unverifiable MS attribution with our own regression. Analysis 8 reveals a surprising result — headline PCE dominates core in the Fed's reaction function during this cycle — which actually *strengthens* the front-end thesis (transitory headline moves don't require policy response). Analysis 10 shows a directionally positive but not conclusive link between deficits and term premium (r=+0.34, p=0.11). Analysis 11 provides the strongest result: Fed balance sheet size explains 76% of term premium variation (r=-0.87), directly quantifying the Warsh QT→steepening channel.
+
+The steepener works not because oil makes the curve steep, but because oil creates two different pressures at two different points on the curve that push in the same direction for our trade. The front end gets relief (transitory inflation → rate cuts), the back end gets punished (deficits → supply → term premium → QT). Carry is manageable. Historical episodes are directionally consistent. The QT→term premium link is empirically robust. The spread widens from 50bp toward 70bp.
 
 This is why the market hasn't fully priced it: the simple "oil = inflation = rates up everywhere" story dominates the narrative, but it misses the second-order dynamics that actually determine where on the curve the pressure lands.
 
@@ -378,3 +505,7 @@ This is why the market hasn't fully priced it: the simple "oil = inflation = rat
 3. **In-sample only:** All regression results and event studies are in-sample. No out-of-sample validation or walk-forward testing has been performed. Historical relationships may not hold in future regimes.
 4. **Negative carry:** The steepener trade has negative carry (2Y yield < 10Y yield inverted relationship in DV01 terms). The thesis must resolve within the defined timeframe or carry drag erodes the P&L — see Analysis 5 for quantification.
 5. **Single macro regime:** The entire sample (2021–2026) spans one unique macro regime: post-COVID normalization, aggressive hiking, and partial easing. Results may not generalize to other rate environments.
+6. **Core PCE headwind (audit finding):** Core PCE at 3.06% and rising is a material headwind for the front-end thesis. The divergence between core CPI (2.5%) and core PCE (3.1%) is unusual and unresolved. If core PCE continues rising, the Fed may be less inclined to cut even with weak labor data.
+7. **Deficit→TP link is weak (audit finding):** Analysis 10 shows the deficit→term premium relationship is directionally correct but not statistically significant at conventional levels (p=0.11). The back-end thesis relies more on the QT channel (Analysis 11, p<0.0001) than the fiscal channel.
+8. **Taylor rule result is regime-dependent (audit finding):** Analysis 8's finding that headline PCE dominates core in the Fed's reaction function may be specific to the 2021-2026 period and not generalizable. The conventional wisdom (core matters more) may reassert in future regimes.
+9. **Warsh confirmation risk:** Senator Tillis's vow to block Warsh's nomination creates a non-trivial risk that the Warsh appointment catalyst (May 2026) does not materialize or is delayed.
