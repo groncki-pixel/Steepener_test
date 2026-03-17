@@ -16,9 +16,9 @@
 
 ### Why the front-end (2Y) should rally (yields lower)
 
-- **Market mispricing rate path:** 2Y at 3.67% vs Fed at 3.75% with -92k NFP — market pricing zero easing into deteriorating labor market. That's the mispricing.
-- **Weak labor market:** NFP printed -92k vs +59k expected. Powell is data-dependent; deteriorating employment is a strong catalyst for easing.
-- **Oil → headline, not core:** MS research shows every 10% oil price increase adds ~35bp to headline CPI but only ~3bp to core CPI. The Fed has historically prioritized core inflation in its reaction function. This is the entry catalyst — oil-driven headline fear creates the window to position.
+- **2Y at 3.67% vs Fed at 3.75% with -92k NFP — market pricing zero easing into deteriorating labor market. That's the mispricing.**
+- **Market mispricing rate path:** Bond traders have priced out all 2026 rate cuts. This is overdone — JPM recommends taking profit on 2Y shorts.
+- **Oil as entry catalyst:** MS research shows every 10% oil price increase adds ~35bp to headline CPI but only ~3bp to core CPI. The Fed has historically prioritized core inflation in its reaction function. The oil-driven flattening creates the window to enter the steepener at favorable levels.
 - **Core PCE falling:** Core PCE inflation has continued to decline in 2026 alongside labor market weakening, even as markets have repriced hawkishly.
 - **FOMC consensus drives cuts; Warsh confirms Fed holds rather than hikes — sufficient for front-end.**
 - **Short-lived conflict:** JPM expects rapid munition depletion and poor risk-reward for the US economy to keep the Iran war brief, meaning oil-driven inflation will be transitory.
@@ -28,8 +28,8 @@
 - **Fiscal deficit expansion:** War spending adds to an already deteriorating fiscal outlook, post the Supreme Court ruling (Feb 20) striking down tariff revenue.
 - **Increased Treasury issuance:** Larger deficits require more long-duration supply, pushing term premium higher.
 - **Quantitative tightening (QT):** As Warsh's appointment approaches, expectations for continued or accelerated QT will pressure long-end supply/demand dynamics.
-- **Warsh as term premium / QT uncertainty driver:** Incoming Fed Chair Warsh's lack of forward guidance and uncertain stance on QT adds structural term premium to longer-dated bonds. His appointment creates a regime shift in how the market prices long-end risk compensation.
 - **Warsh uncertainty:** Lack of forward guidance from Warsh adds term premium to longer-dated bonds.
+- **Warsh as term premium / QT wildcard:** Warsh's hawkish QT instincts and opaque communication style create persistent uncertainty about the pace of balance sheet runoff. This uncertainty lives entirely in the long end — the market cannot price duration supply it cannot forecast, so it demands more term premium. This is the structural channel through which Warsh pushes 10Y yields higher even if he holds or cuts the policy rate.
 
 ### Key Catalysts
 
@@ -39,7 +39,7 @@
 
 ---
 
-## Data File: `data steepener.xlsx`
+## Data File: `data_steepener_updated.xlsx`
 
 The spreadsheet contains daily time series data sourced from Bloomberg, organized across the following sheets. Most series cover approximately 5 years of history (mid-2021 to March 2026).
 
@@ -52,11 +52,11 @@ The spreadsheet contains daily time series data sourced from Bloomberg, organize
 | **US 2 year breakeven** | Date, Last Price | 2020-09-15 → 2026-03-16 | Daily | 1,371 | **US 2-year breakeven inflation rate** (%). Derived from 2Y nominal yield minus 2Y TIPS real yield. Reflects the market's near-term inflation expectations — this is what should spike on oil but is expected to fade if the conflict is short-lived. |
 | **US Core CPI** | Date, Last Price | 2021-03-31 → 2026-01-31 | Monthly | 59 | **US Core CPI YoY** (%). Excludes food and energy. The thesis hinges on oil hitting headline CPI but *not* core — this series is the evidence. Published with ~1 month lag. |
 | **UST 10 y** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 10-year Treasury yield** (%). The back leg of the steepener trade. Expected to rise on fiscal deficit expansion, increased Treasury issuance, and QT expectations. |
-| **FED Balance sheet** | *(placeholder)* | — | — | — | **Federal Reserve total assets** ($bn). Intended to be pulled from FRED. Tracks the pace of quantitative tightening — a shrinking balance sheet means less demand for duration, pushing long-end yields higher. |
+| **FED Balance sheet** | Date, Last Price | 2021-03-17 → present | Weekly (Wed) | ~264 | **Federal Reserve total assets** ($B). Sourced from FRED (WALCL). Tracks the pace of quantitative tightening — a shrinking balance sheet means less demand for duration, pushing long-end yields higher. |
+| **Fed Funds Rate** | Date, Last Price | 2021-03-17 → present | Daily | — | **Federal funds rate upper bound** (%). Sourced from FRED (DFF). The policy rate anchor for the front end of the curve — the 2Y yield trades relative to this rate plus expected changes. |
 | **US 10yr breakeven** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 10-year breakeven inflation rate** (%). Reflects longer-term inflation expectations. If 10Y BE rises faster than 2Y BE, the market is pricing inflation as a persistent (not transitory) risk — relevant for monitoring narrative shifts. |
 | **US 2yr10yr spread** | Date, Last Price | 2021-03-17 → 2026-03-16 | Daily | 1,247 | **US 2s10s yield curve spread** (bp). Calculated as 10Y yield minus 2Y yield. **This is the direct P&L driver of the trade.** Entry at ~50bp, target 70bp, stop loss 42bp. Positive values = normal/steep curve. |
 | **ACM 10yr premium** | Date, Last Price | 2021-03-17 → 2026-03-12 | Daily | 1,245 | **Adrian-Crump-Moench 10-year term premium** (%). Estimated by the NY Fed. Decomposes the 10Y yield into rate expectations + risk compensation. A rising term premium supports the steepener thesis by confirming the back-end selloff is driven by structural supply/fiscal concerns, not just rate expectations. |
-| **Sheet5** | — | — | — | — | Empty / unused. |
 | **← Raw** | — | — | — | — | Empty / unused placeholder for raw data. |
 
 ### Key Relationships to Monitor
@@ -118,7 +118,7 @@ To make the thesis more quantitatively rigorous, consider adding:
 
 ## Quantitative Analysis (`analysis.py`)
 
-We ran three analyses on 5 years of daily data (March 2021 – March 2026) to stress-test the thesis. Each one asks a specific question about a different piece of the trade. Below is the plain-English version of what each one does and why it matters, followed by the detailed technical breakdown and results.
+We ran six analyses on 5 years of daily data (March 2021 – March 2026) to stress-test the thesis. Analyses 1–3 establish the economic mechanisms. Analysis 4 tests them against historical episodes. Analyses 5–6 address the practical questions any trader asks before putting the trade on. All regressions are reported with Newey-West HAC standard errors. Full diagnostic results (stationarity, VIF, Ljung-Box, bootstrap CIs, permutation tests) are in statistical_tests.py.
 
 ---
 
@@ -126,11 +126,11 @@ We ran three analyses on 5 years of daily data (March 2021 – March 2026) to st
 
 #### The Simple Story
 
-Conventional macro says oil flattens curves — confirmed. We enter during flattening as the signal. The naive version of the trade would be: "oil goes up → inflation fears → 2-year yields spike → but 10-year yields spike more → curve steepens." We tested this directly. We looked at every week over the past 5 years, measured how much oil moved, and checked whether the 2s10s spread widened in response.
+Conventional macro says oil flattens curves — we tested this and confirmed it. The direct statistical link between weekly oil moves and the 2s10s spread is essentially zero (R² = 0.0005, p = 0.71). Oil going up does push both the 2-year and 10-year yields higher, but by almost the same amount — the 10Y is only 1.1x more sensitive than the 2Y. Oil spike weeks (>5% weekly move) actually slightly flatten the curve (-1bp on average). This is the signal, not a problem: we enter during the oil-driven flattening, positioning for the structural forces (term premium, transitory inflation) to reassert and steepen the curve afterward.
 
-**The answer is: not really.** The direct statistical link between weekly oil moves and the 2s10s spread is essentially zero (R² = 0.0005, p = 0.71). Oil going up does push both the 2-year and 10-year yields higher, but by almost the same amount — the 10Y is only 1.1x more sensitive than the 2Y. During oil spike weeks (>5% weekly move), the spread actually *tightened* by about 1bp on average.
+**This is the core of the entry logic.** The oil-driven flattening creates a window where the 2s10s spread compresses to attractive levels (our 50bp entry), but the structural steepening forces — term premium on the back end (Analysis 2) and transitory inflation fading on the front end (Analysis 3) — are still intact underneath. We are fading the flattening, not betting that oil mechanically steepens the curve.
 
-**Why this is actually good for the thesis:** It tells us the steepener is NOT a naive "oil goes up, curve steepens" bet. If it were, every macro tourist would be in the trade already and it would be priced in. Instead, the steepening mechanism works through two *indirect* channels that the market hasn't fully connected yet — the term premium channel (Analysis 2) and the transitory inflation channel (Analysis 3). The fact that oil alone doesn't steepen the curve is what creates the opportunity: the market sees oil → inflation → rates higher across the board, but it's missing the nuance that the *type* of pressure is different at each end of the curve.
+**Why this creates an opportunity:** The steepener is NOT a naive "oil goes up, curve steepens" bet. If it were, every macro tourist would be in the trade already and it would be priced in. Instead, the steepening mechanism works through two *indirect* channels that the market hasn't fully connected yet — the term premium channel (Analysis 2) and the transitory inflation channel (Analysis 3). The market sees oil → inflation → rates higher across the board, but it's missing the nuance that the *type* of pressure is different at each end of the curve.
 
 #### The Detailed Version
 
@@ -214,6 +214,8 @@ If oil inflation is temporary, 2-year breakevens should spike (because oil affec
 
 Meanwhile, the back end doesn't benefit from the "transitory" story at all, because the forces pushing 10Y yields higher (deficits, issuance, term premium) have nothing to do with oil and everything to do with structural fiscal deterioration. The two legs are driven by *different things*, which is exactly the asymmetry we're trading.
 
+The thesis breaks if the breakeven slope turns positive (10Y BE > 2Y BE), signaling the market is repricing oil as persistent structural inflation.
+
 #### The Detailed Version
 
 **Methodology:** Weekly percentage changes in WTI regressed against weekly changes in 2Y breakeven and 10Y breakeven separately. We also computed the "breakeven slope" (10Y BE minus 2Y BE) as a daily time series and analyzed its historical distribution and co-movement with oil.
@@ -249,10 +251,6 @@ The asymmetry is even more pronounced during large oil moves — precisely the r
 A negative breakeven slope means the TIPS market is pricing in inflation that is *front-loaded and temporary*. At the 13th percentile, the current reading is more inverted than 87% of the last 5 years. This is the market screaming "transitory" — and it gives the Fed all the cover it needs to look through the oil shock and focus on employment.
 
 **Implication for the trade:** This analysis directly de-risks the front leg. The market is not just hoping oil inflation is transitory — it has priced it as such, strongly and consistently. The 2Y yield spike we've seen is driven by headline fear and narrative ("inflation is back!"), but the breakeven market — where real money is actually positioned — is telling a different story. As the headline narrative fades and the data confirms what breakevens already show (core PCE continuing to decline, oil effects washing out within 3 months per MS research), the 2Y yield should come back down, and the front leg of the steepener pays off.
-
-**Thesis break:** The thesis breaks if the breakeven slope turns positive (10Y BE > 2Y BE), signaling the market is repricing oil as persistent structural inflation.
-
----
 
 ---
 
@@ -309,13 +307,13 @@ The key numbers: carry costs roughly 10bp per year (the exact number depends on 
 
 **Methodology:**
 
-- Daily carry cost is approximated as the net rolldown difference between the two legs. The 2Y rolls toward the front of the curve (which is inverted relative to the policy rate), and the 10Y rolls down the belly. The net cost in a DV01-neutral structure is roughly (2Y rolldown − 10Y rolldown) / 365, expressed in bp per day.
-- Scenario table: for each spread outcome (42bp stop, 46bp, 50bp entry, 54bp, 60bp, 70bp target), compute the spread P&L (outcome minus entry) and subtract the cumulative carry cost at 30, 60, and 90 days.
-- Max holding period: the number of days for cumulative carry to equal the target P&L of +20bp, assuming no spread movement.
+* Daily carry cost is approximated as the net rolldown difference between the two legs. The 2Y rolls toward the front of the curve (which is inverted relative to the policy rate), and the 10Y rolls down the belly. The net cost in a DV01-neutral structure is roughly (2Y rolldown - 10Y rolldown) / 365, expressed in bp per day.
+* Scenario table: for each spread outcome (42bp stop, 46bp, 50bp entry, 54bp, 60bp, 70bp target), compute the spread P&L (outcome minus entry) and subtract the cumulative carry cost at 30, 60, and 90 days.
+* Max holding period: the number of days for cumulative carry to equal the target P&L of +20bp, assuming no spread movement.
 
 **Results:**
 
-The scenario table shows net P&L at each combination. At the target of 70bp, the net P&L after 90 days of carry is still very close to the gross +20bp. At the stop of 42bp, the net loss after 90 days is only marginally worse than the gross −8bp. Carry drag over a 90-day horizon is in the low single digits of basis points — not material relative to the 20bp target or the 8bp stop.
+The scenario table shows net P&L at each combination. At the target of 70bp, the net P&L after 90 days of carry is still very close to the gross +20bp. At the stop of 42bp, the net loss after 90 days is only marginally worse than the gross -8bp. Carry drag over a 90-day horizon is in the low single digits of basis points — not material relative to the 20bp target or the 8bp stop.
 
 The max holding period (days until carry alone erodes the full target) is well over a year. This confirms the trade is not a race against carry — it's a race against whether the catalysts (Fed meeting, conflict resolution, Warsh) fire within a reasonable timeframe, which they should given the March–May 2026 calendar.
 
@@ -342,7 +340,7 @@ Either answer is useful. Fast mean reversion means the trade works almost automa
 1. Identify all 30 weeks where WTI rose >5% (same spike definition as Analysis 1).
 2. Record the 2Y yield change in each spike week (the "impulse").
 3. For each spike week, track the cumulative 2Y yield change at +1, +2, +4, +8, and +12 weeks from the spike date.
-4. Express the cumulative change as a percentage of the spike-week move. If the spike-week move was +5bp and the cumulative change at +8 weeks is −3bp, that's 60% reversal.
+4. Express the cumulative change as a percentage of the spike-week move. If the spike-week move was +5bp and the cumulative change at +8 weeks is -3bp, that's 60% reversal.
 5. Report the median reversal path and interquartile range across all 30 events.
 
 **Results:**
@@ -359,52 +357,24 @@ The individual 2Y paths after each spike week are also plotted, showing the disp
 
 ### How The Six Analyses Fit Together
 
-Think of it as a chain:
+Think of the six analyses as three pairs, each answering a different type of question:
 
-1. **Analysis 1** eliminates the naive thesis. Oil doesn't mechanically steepen the curve — if you just go "oil up, steepener on," you get nothing. This clears the field of the obvious trade. Conventional macro says oil flattens curves — we enter during flattening as the signal.
+**The mechanism (Analyses 1–3):** Analysis 1 eliminates the naive thesis — oil doesn't mechanically steepen the curve, it flattens it, and that flattening is our entry signal. Analysis 2 provides the engine for the back leg — term premium, not rate expectations, is driving 10Y yields higher, and that's structural. Analysis 3 provides the engine for the front leg — the market already prices oil inflation as transitory, which gives the Fed cover to focus on the labor market and keep cuts on the table. Together, these three establish why the spread should widen from 50bp to 70bp.
 
-2. **Analysis 2** provides the engine for the back leg. The 10Y is being pushed higher by term premium — fiscal deficits, bond supply, QT uncertainty — not by rate expectations. This is structural and persistent. It doesn't need oil to continue. It just needs the government to keep spending money it doesn't have (which the war guarantees).
+**The historical check (Analysis 4):** The regime study asks whether the mechanism has played out before. With only ~4 episodes the answer is directional, not definitive — post-shock spread changes are consistent with steepening, and the permutation test and threshold sensitivity confirm the pattern isn't an artifact of how we defined "oil shock." This doesn't prove the thesis but it rules out the objection that "historically curves just flatten after oil and stay flat."
 
-3. **Analysis 3** provides the engine for the front leg. Oil inflation is temporary — the market already knows it, breakevens confirm it. So the Fed can cut, Warsh will cut, and 2Y yields come down.
+**The practical questions (Analyses 5–6):** These are what a trader asks before putting the trade on. Analysis 5 quantifies carry drag and shows it's not the binding constraint — you have well over a year before carry alone erodes the target P&L, and the catalysts are clustered in March–May 2026. Analysis 6 tests whether the front end actually gives back its oil-driven spike, and at what speed — telling you whether the trade works passively (mechanical mean reversion) or actively (catalyst-dependent repricing).
 
-4. **Analysis 4** validates the regime thesis. Oil shocks create systematically different curve dynamics — our trade is designed for this specific environment.
-
-5. **Analysis 5** quantifies the cost. Negative carry is the price of admission — this analysis ensures we know exactly how long we can hold and what the break-even looks like.
-
-6. **Analysis 6** validates the front-end mechanism. The 2Y yield historically reverts after oil spikes, confirming the mean-reversion thesis that powers the front leg.
-
-**The steepener works not because oil makes the curve steep, but because oil creates two *different* pressures at two *different* points on the curve that push in the same direction for our trade.** The front end gets relief (transitory inflation → rate cuts), the back end gets punished (deficits → supply → term premium). The spread widens from 50bp toward 70bp.
+The steepener works not because oil makes the curve steep, but because oil creates two different pressures at two different points on the curve that push in the same direction for our trade. The front end gets relief (transitory inflation → rate cuts), the back end gets punished (deficits → supply → term premium). Carry is manageable. Historical episodes are directionally consistent. The spread widens from 50bp toward 70bp.
 
 This is why the market hasn't fully priced it: the simple "oil = inflation = rates up everywhere" story dominates the narrative, but it misses the second-order dynamics that actually determine where on the curve the pressure lands.
 
 ---
 
-## Statistical Tests (`statistical_tests.py`)
-
-A standalone battery of statistical tests that validate the robustness of all regression results and key assumptions. Organized into two tiers:
-
-### Tier 1 — Core Validity
-| Test | What It Checks | Output |
-|------|---------------|--------|
-| **1. Newey-West HAC** | Autocorrelation-robust standard errors for all regressions | Original vs HAC SE/p-value comparison table |
-| **2. Stationarity (ADF + KPSS)** | Unit root tests on all series in levels and first differences | I(0)/I(1)/ambiguous classification table |
-| **3. VIF** | Multicollinearity between rate expectations and term premium (Analysis 2) | Two VIF numbers + interpretation |
-| **4. Ljung-Box** | Residual autocorrelation at lags 5, 10, 20 | LB stat and p-value per regression |
-
-### Tier 2 — Material Strengthening
-| Test | What It Checks | Output |
-|------|---------------|--------|
-| **5. Rolling 252-day betas** | Time-variation in Analysis 2 coefficients | Chart + full-sample/rolling mean/min/max/std |
-| **6. Bootstrap CIs** | Non-parametric confidence intervals (10,000 resamples) | Point estimate, 5th/95th percentile table |
-| **7. Permutation test** | Statistical significance of regime spread differences (Analysis 4) | Actual gap, p-value, histogram |
-| **8. Threshold sensitivity** | Robustness of regime results across 15%–30% thresholds | Sensitivity matrix (threshold × horizon) |
-
----
-
 ## Limitations
 
-1. **Small regime sample:** Regime analysis (Analysis 4) is based on approximately 4 distinct oil shock episodes — directional evidence, not statistically proven.
-2. **Model-derived inputs:** The ACM term premium is a model estimate with its own estimation uncertainty; results in Analysis 2 inherit this uncertainty.
-3. **In-sample only:** All results are in-sample — no out-of-sample validation has been performed.
-4. **Negative carry:** The trade has negative carry — the thesis must resolve within a defined timeframe or carry costs erode profitability (see Analysis 5).
-5. **Limited macro regime:** The sample spans one unique macro regime (post-COVID normalization through 2026) — generalizability to other rate environments is limited.
+1. **Small regime sample:** The regime analysis (Analysis 4) is based on approximately 4 major oil spike episodes in the 5-year sample. This provides directional evidence but is not statistically proven at conventional significance levels.
+2. **Model-derived term premium:** The ACM term premium is an econometric estimate, not a directly observable quantity. It carries estimation uncertainty, and alternative term premium models (Kim-Wright, etc.) may produce different decompositions.
+3. **In-sample only:** All regression results and event studies are in-sample. No out-of-sample validation or walk-forward testing has been performed. Historical relationships may not hold in future regimes.
+4. **Negative carry:** The steepener trade has negative carry (2Y yield < 10Y yield inverted relationship in DV01 terms). The thesis must resolve within the defined timeframe or carry drag erodes the P&L — see Analysis 5 for quantification.
+5. **Single macro regime:** The entire sample (2021–2026) spans one unique macro regime: post-COVID normalization, aggressive hiking, and partial easing. Results may not generalize to other rate environments.
