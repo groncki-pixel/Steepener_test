@@ -1,0 +1,33 @@
+Generated: 2026-03-18 19:09
+================================================================================
+NEW-12: Oil as Catalyst — Timing & Fed Repricing
+================================================================================
+
+OIL SHOCK → FED SIGNAL TIMING:
+  1990 Gulf War          Oil:    +91%  Signal:  88d  Analog: 7/10
+  2005 Katrina           Oil:    +18%  Signal:  22d  Analog: 4/10
+  2008 Oil Spike         Oil:    +53%  Signal:  20d  Analog: 5/10
+  2011 Libya/Arab Spring Oil:    +35%  Signal:  28d  Analog: 9/10
+  2014 Oil Crash         Oil:    -57%  Signal: 131d  Analog: 6/10
+  2022 Russia-Ukraine    Oil:    +33%  Signal:  20d  Analog: 2/10
+
+Average signal time (good analogs): 82 days
+
+2026 ANALOG: 2011 Libya (best fit, score 9/10)
+  Core PCE near target, Fed restrictive, supply-side oil shock
+
+2Y FAIR VALUE:
+  Current implied cuts: 0.3
+  Fair implied cuts (oil transitory): 1.5
+  Fair 2Y: 3.375%
+  Current 2Y: 3.671%
+  Mispricing: -30bp
+
+SPREAD IMPACT:
+  Oil-only steepening: 30bp → 84bp
+  Oil + Warsh TP: 40bp → 94bp
+
+TIMELINE:
+  Days since shock: 17
+  Expected signal: ~65 more days
+  Next FOMC: 2026-05-07 (52 days)
