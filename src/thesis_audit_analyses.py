@@ -24,8 +24,8 @@ from statsmodels.regression.linear_model import OLS
 import warnings
 warnings.filterwarnings("ignore")
 
-DATA_FILE = "17.3_data_steepener_updated.xlsx"
-BLOOMBERG_FILE = "data_steepener_updated.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
+BLOOMBERG_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING
@@ -640,8 +640,8 @@ ax.text(0.05, 0.95, f"beta={model_bs_level.params[1]:+.8f}\nR²={model_bs_level.
         bbox=dict(boxstyle="round,pad=0.4", facecolor="wheat", alpha=0.8))
 
 plt.tight_layout(rect=[0, 0, 1, 0.98])
-plt.savefig("thesis_audit_results.png", dpi=150, bbox_inches="tight")
-print(f"\nCharts saved to thesis_audit_results.png")
+plt.savefig("../output/thesis_audit_results.png", dpi=150, bbox_inches="tight")
+print(f"\nCharts saved to ../output/thesis_audit_results.png")
 
 
 # ═════════════════════════════════════════════════════════

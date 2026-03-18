@@ -35,7 +35,7 @@ from statsmodels.tsa.stattools import adfuller, kpss
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.regression.linear_model import OLS
 
-DATA_FILE = "data steepener.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING (same pattern as analysis.py)
@@ -395,8 +395,8 @@ ax.set_title("Rolling 252-Day Regression Betas: d(Spread) = b0 + b1*d(Rate Exp) 
 ax.legend(loc="best", fontsize=9)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig("rolling_betas.png", dpi=150, bbox_inches="tight")
-print(f"\n  Chart saved to rolling_betas.png")
+plt.savefig("../output/rolling_betas.png", dpi=150, bbox_inches="tight")
+print(f"\n  Chart saved to ../output/rolling_betas.png")
 
 
 # ─────────────────────────────────────────────────────────
@@ -554,8 +554,8 @@ ax.set_title(f"Permutation Test: Oil Shock vs Normal Regime Spread Outcome\n"
 ax.legend(fontsize=10)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig("permutation_test.png", dpi=150, bbox_inches="tight")
-print(f"  Histogram saved to permutation_test.png")
+plt.savefig("../output/permutation_test.png", dpi=150, bbox_inches="tight")
+print(f"  Histogram saved to ../output/permutation_test.png")
 
 
 # ─────────────────────────────────────────────────────────

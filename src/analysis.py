@@ -27,7 +27,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 import warnings
 warnings.filterwarnings("ignore")
 
-DATA_FILE = "data steepener.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING
@@ -776,8 +776,8 @@ ax.text(0.05, 0.95, ratio_text,
         bbox=dict(boxstyle="round,pad=0.4", facecolor="wheat", alpha=0.8))
 
 plt.tight_layout(rect=[0, 0, 1, 0.98])
-plt.savefig("analysis_results.png", dpi=150, bbox_inches="tight")
-print(f"\nCharts saved to analysis_results.png")
+plt.savefig("../output/analysis_results.png", dpi=150, bbox_inches="tight")
+print(f"\nCharts saved to ../output/analysis_results.png")
 
 
 # ─────────────────────────────────────────────────────────
