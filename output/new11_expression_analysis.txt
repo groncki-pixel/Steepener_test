@@ -1,0 +1,28 @@
+Generated: 2026-03-18 19:09
+================================================================================
+NEW-11: SOFR Expression Analysis & Proper Risk/Reward
+================================================================================
+
+SOFR Term Structure (derived):
+  SFRZ6: 3.703%  SFRH7: 3.691%  Z6/H7 spread: -1.2bp
+
+Carry:
+  SOFR calendar spread: ~0 bp/month
+  Cash bond steepener: -4.5bp/month (eliminated)
+
+Sizing (4 SOFR + 10 Micro 10Y):
+  SOFR DV01: $100/bp  Micro 10Y DV01: $100/bp
+  Margin: ~$12,000
+
+P&L Scenarios:
+  War resolution (oil -20%)           P&L: $+2,000
+  War + Fed confirms transitory       P&L: $+2,500
+  War + Warsh QT signal               P&L: $+3,500
+  Full scenario (all catalysts)       P&L: $+5,000
+  Adverse: oil stays high             P&L: $-500
+  Worst case: broad risk-off          P&L: $-2,000
+
+Risk/Reward:
+  Base target: $+3,000 (R/R 1.5:1)
+  Full target: $+5,000 (R/R 2.5:1)
+  Stop loss:   $-2,000

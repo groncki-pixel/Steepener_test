@@ -1,0 +1,30 @@
+Generated: 2026-03-18 19:09
+================================================================================
+NEW-9: Fed Reaction Function — Core vs Headline (Event Study)
+================================================================================
+
+Replaces A8 Taylor Rule horse race (killed by VIF) with event study.
+
+OIL SHOCK EPISODES:
+Episode                   Oil Chg  Head CPI  Core PCE   FFR 6M Action           Reacted To          
+-----------------------------------------------------------------------------------------------
+1990 Gulf War                +91%     +1.6pp     +0.4pp      -1bp CUT 125bp        CORE                
+2005 Katrina / Oil Spike     +18%     +2.2pp     +0.1pp      +1bp HIKED 125bp      CORE (hike cycle pre-existing)
+2008 Oil Spike (pre-GFC)     +53%     +1.6pp     +0.2pp      -1bp CUT 100bp        CORE / financial stability
+2011 Libya / Arab Spring     +35%     +2.3pp     +0.6pp      +0bp HELD (at ZLB)    CORE (oil explicitly transitory)
+2014 Oil Crash               -57%     -2.2pp     +0.1pp      +0bp HELD (delayed hike) CORE (delayed hike despite low headline)
+2022 Russia-Ukraine          +33%     +1.6pp     +0.1pp      +2bp HIKED 225bp      CORE (hiking cycle pre-existing; broad inflation, not oil)
+
+SCORECARD:
+  Fed reacted to CORE: 6/6 (100%)
+  Fed held or cut within 6M: 4/6 (67%)
+  Avg headline-core gap: +0.9pp
+
+2026 LIVE DATA:
+  Oil: +39.5%  FFR: +0bp  2Y: +29.6bp
+  Implied cuts: 1.5 → 0.3
+  2Y overreaction: 30bp with zero Fed action
+
+CONCLUSION: Fed reacts to core PCE in 6/6 oil shocks.
+2Y overreaction of 30bp will reverse as Fed confirms 'transitory'.
+Best analog: 2011 Libya (core near target, Fed held).

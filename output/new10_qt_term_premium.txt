@@ -1,0 +1,25 @@
+Generated: 2026-03-18 19:09
+================================================================================
+NEW-10: QT → Term Premium Episode Study
+================================================================================
+
+Replaces A11 levels regression (spurious) with episode study.
+
+QT EPISODES:
+Episode                          BS Chg($B) TP Chg(pp)  bp/$100B
+-----------------------------------------------------------------
+Taper Tantrum                            +0      +0.75       inf
+QT1                                    -688      +0.25       3.6
+QT2 (Phase 1: Jun-Dec 2022)            -332      +0.25       7.5
+QT2 (Phase 2: Jan 2023 – Sep 2023)       -815      +0.35       4.3
+QT2 (Full: Jun 2022 – Dec 2024)       -1950      +0.65       3.3
+
+Average: 4.7bp per $100B  |  Median: 4.0bp per $100B
+
+WARSH SCENARIO:
+  Central TP uplift: +63bp
+  Spread steepening: +25bp
+  Implied 2s10s: 80bp
+
+TP RANGE: Low +27bp / Mid +63bp / High +117bp
+Spread range: 65bp / 80bp / 101bp
