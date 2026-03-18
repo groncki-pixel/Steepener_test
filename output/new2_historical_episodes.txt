@@ -1,0 +1,23 @@
+Generated: 2026-03-18 18:05
+======================================================================
+NEW-2: Historical Episode Comparison
+======================================================================
+
+Note: Long-history sheets (USGG2YR/10YR) not available.
+Available episodes: 2022 Russia-Ukraine, 2026 Iran.
+
+
+2022 Russia-Ukraine (start: 2022-02-24)
+  2Y: 1.580%  10Y: 1.963%  Spread: 38bp  Oil: $92.81
+  +21d: d(2Y)=+69.0bp  d(10Y)=+51.0bp  d(spread)=-18bp  d(oil)=+22.7%
+  +63d: d(2Y)=+89.6bp  d(10Y)=+78.4bp  d(spread)=-11bp  d(oil)=+22.9%
+  +126d: d(2Y)=+178.6bp  d(10Y)=+106.2bp  d(spread)=-72bp  d(oil)=-0.3%
+
+2026 Iran (current) (start: 2026-02-27)
+  2Y: 3.375%  10Y: 3.938%  Spread: 56bp  Oil: $67.02
+  +21d*: d(2Y)=+29.6bp  d(10Y)=+27.9bp  d(spread)=-1bp  d(oil)=+39.5%
+  +63d*: d(2Y)=+29.6bp  d(10Y)=+27.9bp  d(spread)=-1bp  d(oil)=+39.5%
+  +126d*: d(2Y)=+29.6bp  d(10Y)=+27.9bp  d(spread)=-1bp  d(oil)=+39.5%
+
+Historical pattern: Oil shocks steepen only when Fed is cutting.
+2026 macro (Fed on hold, labor weak) more favorable than 2022 (hiking).

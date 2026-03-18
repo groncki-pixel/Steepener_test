@@ -1,0 +1,13 @@
+Generated: 2026-03-18 18:05
+======================================================================
+NEW-4: Breakeven vs Nominal Decomposition (Time Series)
+======================================================================
+
+2026 Episode (anchor: 2026-02-27):
+  Latest d(Nominal): +29.6bp
+  Latest d(Breakeven): +33.9bp (114% of move)
+  Latest d(Real): -4.2bp (-14% of move)
+
+Conclusion: 2026 move is breakeven-dominated (oil/inflation expectations).
+Real yields fell, meaning TIPS market doesn't buy the hawkish repricing.
+This supports Pillar 1: front-end overreaction on transitory inflation.

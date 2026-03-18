@@ -1,0 +1,11 @@
+Generated: 2026-03-18 18:05
+======================================================================
+NEW-5: Market Positioning & Sentiment Proxy
+======================================================================
+
+Note: CFTC data not available. Using VIX + spread analytics.
+
+Spread: 54bp (z=-0.39, 43th pctile 1Y, 69th pctile 2Y)
+VIX: 23.5 (z=+2.02, 92th pctile)
+Corr(d_spread, d_VIX): +0.110 (all), +0.277 (3M)
+Spread vol: 32bp ann (6th pctile)

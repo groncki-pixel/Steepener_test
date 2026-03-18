@@ -1,0 +1,26 @@
+Generated: 2026-03-18 18:04
+======================================================================
+NEW-1: Fed Path Repricing Analysis
+======================================================================
+
+Note: WIRP sheets not available. Using 2Y-FFR spread as easing proxy.
+
+Period: 2026-02-27 to 2026-03-16
+
+Fed Funds Rate: 3.75% → 3.75%
+2Y Yield: 3.375% → 3.671% (+29.6bp)
+Oil (WTI): $67.02 → $93.50 (+39.5%)
+
+2Y-FFR spread (easing proxy):
+  Pre-war:  -38bp (~1.5 cuts)
+  Current:  -8bp (~0.3 cuts)
+  Change:   +30bp = -1.2 cuts repriced
+
+A7 passthrough vs actual repricing:
+  Oil change: +39.5%
+  Headline CPI impact: +245bp
+  Core PCE impact: +87bp
+  Implied FFR adjustment (headline): +1.2bp
+  Implied FFR adjustment (core): +0.4bp
+  Actual 2Y repricing: +29.6bp
+  Overreaction vs core: +29.2bp
