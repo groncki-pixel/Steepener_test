@@ -1,3 +1,34 @@
+# ═══════════════════════════════════════════════════════════════
+# LEGACY FILE — DO NOT USE FOR CURRENT THESIS
+# ═══════════════════════════════════════════════════════════════
+# This file contains the ORIGINAL analyses from thesis v1.
+# After rigorous sniff-testing and statistical audit, the following
+# were found to be problematic:
+#
+# analysis.py:
+#   A1 (Oil→Curve): REFRAMED — p=0.80, no relationship. Oil flattens, not steepens.
+#   A4 (Regime Study): KILLED — contradicts thesis (flattening at all horizons).
+#   A6 (2Y Mean Reversion): KILLED — statistical noise, IQRs span hundreds of %.
+#   A2 (Term Premium): KEPT — strongest result, central to Pillar 2.
+#   A3 (Breakeven Divergence): KEPT — 2.6x ratio robust, central to Pillar 1.
+#   A5 (Carry): KEPT — mechanically correct, needs rebuild for new expression.
+#
+# statistical_tests.py:
+#   All 8 tests remain valid diagnostics. Key findings:
+#   - HAC corrections essential (Ljung-Box significant on most regressions)
+#   - Bootstrap CI on BE ratio [2.19, 3.15] excludes 1.0 (robust)
+#   - Rolling beta(TP) positive 100% of windows (stable)
+#
+# thesis_audit_analyses.py:
+#   A7 (Oil→CPI): KEPT — headline >> core confirmed (~3x ratio in changes)
+#   A8 (Taylor Rule): DOWNGRADED — VIF=10.3, horse race useless
+#   A10 (Deficit→TP): DOWNGRADED — spurious in levels, wrong sign in changes
+#   A11 (Fed BS→TP): KEPT WITH CAVEAT — changes p=0.07, correct direction
+#
+# See src/ for the new analysis suite and docs/thesis_restructured.md for
+# the restructured thesis.
+# ═══════════════════════════════════════════════════════════════
+
 """
 Steepener Trade Thesis — Quantitative Analysis
 ================================================
@@ -27,7 +58,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 import warnings
 warnings.filterwarnings("ignore")
 
-DATA_FILE = "data steepener.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING
@@ -776,8 +807,8 @@ ax.text(0.05, 0.95, ratio_text,
         bbox=dict(boxstyle="round,pad=0.4", facecolor="wheat", alpha=0.8))
 
 plt.tight_layout(rect=[0, 0, 1, 0.98])
-plt.savefig("analysis_results.png", dpi=150, bbox_inches="tight")
-print(f"\nCharts saved to analysis_results.png")
+plt.savefig("../output/analysis_results.png", dpi=150, bbox_inches="tight")
+print(f"\nCharts saved to ../output/analysis_results.png")
 
 
 # ─────────────────────────────────────────────────────────
@@ -818,3 +849,107 @@ print(f"""
 
 TRADE: Entry {daily['spread'].iloc[-1]:.0f}bp -> Target 70bp (SL 42bp)
 """)
+
+
+# ═════════════════════════════════════════════════════════
+# WRITE RESULTS FILE
+# ═════════════════════════════════════════════════════════
+results_path = "../output/analysis_results.txt"
+with open(results_path, "w") as f:
+    f.write(f"Generated: {pd.Timestamp.now():%Y-%m-%d %H:%M}\n")
+    f.write("=" * 75 + "\n")
+    f.write("STEEPENER ANALYSIS RESULTS (A1-A6)\n")
+    f.write("=" * 75 + "\n\n")
+
+    # A1
+    f.write("A1: Oil-Curve Asymmetry\n")
+    f.write(f"  Oil->Spread beta: {slope1:.4f} bp/1% oil (HAC p={hac_pval:.4f}, R2={r1**2:.4f})\n")
+    f.write(f"  Oil->2Y beta:  {s2:.4f} (p={p2:.4f})\n")
+    f.write(f"  Oil->10Y beta: {s10:.4f} (p={p10:.4f})\n")
+    f.write(f"  10Y/2Y ratio:  {abs(s10/s2) if s2 != 0 else float('inf'):.1f}x\n")
+    f.write(f"  Spike weeks (>{spike_thresh}%): n={len(spikes)}\n")
+    f.write(f"    avg d(spread)={spikes['d_spread'].mean():+.2f}bp\n")
+    f.write(f"    avg d(2Y)={spikes['d_ust2y'].mean():+.4f}%\n")
+    f.write(f"    avg d(10Y)={spikes['d_ust10y'].mean():+.4f}%\n\n")
+
+    # A2
+    f.write("A2: Term Premium Decomposition\n")
+    f.write(f"  beta(rate_exp): {betas[1]:+.4f} (t={t_stats[1]:+.2f})\n")
+    f.write(f"  beta(term_prem): {betas[2]:+.4f} (t={t_stats[2]:+.2f})\n")
+    f.write(f"  R2: {r2_multi:.4f}\n")
+    f.write(f"  VIF(rate_exp): {vif_rate_exp:.2f}  VIF(term_prem): {vif_tp:.2f}\n")
+    f.write(f"  Current: 10Y={daily['ust10y'].iloc[-1]:.3f}%, TP={daily['acm'].iloc[-1]:.3f}%, RateExp={daily['rate_exp'].iloc[-1]:.3f}%\n")
+    f.write(f"  Last 6M: TP change={tp_move:+.3f}%, RateExp change={re_move:+.3f}%\n")
+    tp_pct = tp_move/y10_move*100 if y10_move else 0
+    f.write(f"  TP share of 10Y move: {tp_pct:+.0f}%\n")
+    f.write(f"  Rolling beta(TP): mean={rolling_beta_tp.mean():+.3f} min={rolling_beta_tp.min():+.3f} max={rolling_beta_tp.max():+.3f}\n")
+    pct_positive = np.mean(rolling_beta_tp > 0) * 100
+    f.write(f"  % of windows with positive beta(TP): {pct_positive:.0f}%\n\n")
+
+    # A3
+    f.write("A3: Breakeven Divergence\n")
+    f.write(f"  Oil->2Y BE beta: {s_be2:.4f} (p={p_be2:.4f}, R2={r_be2**2:.4f})\n")
+    f.write(f"  Oil->10Y BE beta: {s_be10:.4f} (p={p_be10:.4f}, R2={r_be10**2:.4f})\n")
+    f.write(f"  2Y/10Y ratio: {abs(s_be2/s_be10) if s_be10 != 0 else float('inf'):.1f}x\n")
+    f.write(f"  Spike weeks: avg d(2Y BE)={spike_be2:+.4f}%, avg d(10Y BE)={spike_be10:+.4f}%\n")
+    f.write(f"  Current BE slope: {current_be_slope:.3f}% ({be_slope_pctile:.0f}th percentile)\n")
+    f.write(f"  BE slope persistence (median at each horizon):\n")
+    for i, h in enumerate(horizons_be):
+        if not np.isnan(be_slope_medians[i]):
+            f.write(f"    +{h}w: {be_slope_medians[i]:.4f}%\n")
+    f.write(f"  Stays negative 8+ weeks: {'YES' if stays_negative_8w else 'NO'}\n\n")
+
+    # A4
+    f.write("A4: Oil Regime Spread Outcomes\n")
+    for thresh in thresholds:
+        if thresh not in regime_results:
+            continue
+        res = regime_results[thresh]
+        f.write(f"  Threshold {thresh}% (n={res['n_events']} episodes):\n")
+        for i, h in enumerate(outcome_horizons):
+            obs = res["observed_means"][h]
+            pp = res["perm_pvals"][h]
+            if not np.isnan(obs):
+                f.write(f"    {horizon_labels[i]}: mean dZ={obs:+.4f} perm_p={pp:.4f}\n")
+    f.write(f"  Threshold sensitivity (3M):\n")
+    f.write(f"    {'Thresh':>6s} {'N':>5s} {'Mean dZ':>10s} {'Perm p':>8s}\n")
+    for thresh in thresholds:
+        if thresh in regime_results:
+            res = regime_results[thresh]
+            obs = res["observed_means"].get(63, np.nan)
+            pp = res["perm_pvals"].get(63, np.nan)
+            f.write(f"    {thresh:>5d}% {res['n_events']:>5d} {obs:>+10.4f} {pp:>8.4f}\n")
+    f.write("\n")
+
+    # A5
+    f.write("A5: Carry & Scenario P&L\n")
+    f.write(f"  Current: 2Y={current_2y:.3f}%, 10Y={current_10y:.3f}%, spread={current_spread:.1f}bp\n")
+    f.write(f"  Daily carry: {daily_carry_bp:+.4f}bp/day, monthly: {daily_carry_bp*30:+.2f}bp\n")
+    f.write(f"  Scenario P&L (entry={entry_spread}bp):\n")
+    f.write(f"    {'Spread':>16s}")
+    for d in holding_days:
+        f.write(f" {str(d)+'d':>9s}")
+    f.write("\n")
+    for i, s in enumerate(scenario_spreads):
+        spread_pnl = s - entry_spread
+        f.write(f"    {scenario_labels[i]:>16s}")
+        for d in holding_days:
+            total_pnl = spread_pnl + daily_carry_bp * d
+            f.write(f" {total_pnl:>+8.1f}bp")
+        f.write("\n")
+    if daily_carry_bp < 0:
+        f.write(f"  Max holding period (carry drag): {max_hold:.0f} days\n")
+    f.write("\n")
+
+    # A6
+    f.write("A6: 2Y Mean Reversion After Oil Spikes\n")
+    f.write(f"  Spike events: n={len(spike_week_2y_changes)}\n")
+    f.write(f"  Median spike-week 2Y change: {np.median(spike_week_2y_changes):+.4f}%\n")
+    f.write(f"  Reversion (% of spike reversed):\n")
+    f.write(f"    {'Weeks':>6s} {'Median':>10s} {'Q25':>10s} {'Q75':>10s}\n")
+    for i, h in enumerate(horizons_6):
+        if not np.isnan(reversion_medians[i]):
+            f.write(f"    +{h:>4d}w {reversion_medians[i]:>+10.1f}% {reversion_q25[i]:>+10.1f}% {reversion_q75[i]:>+10.1f}%\n")
+    f.write(f"  50%+ reversal by 8 weeks: {'YES' if gives_back_50 else 'NO'}\n")
+
+print(f"Results written to {results_path}")

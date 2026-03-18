@@ -1,3 +1,34 @@
+# ═══════════════════════════════════════════════════════════════
+# LEGACY FILE — DO NOT USE FOR CURRENT THESIS
+# ═══════════════════════════════════════════════════════════════
+# This file contains the ORIGINAL analyses from thesis v1.
+# After rigorous sniff-testing and statistical audit, the following
+# were found to be problematic:
+#
+# analysis.py:
+#   A1 (Oil→Curve): REFRAMED — p=0.80, no relationship. Oil flattens, not steepens.
+#   A4 (Regime Study): KILLED — contradicts thesis (flattening at all horizons).
+#   A6 (2Y Mean Reversion): KILLED — statistical noise, IQRs span hundreds of %.
+#   A2 (Term Premium): KEPT — strongest result, central to Pillar 2.
+#   A3 (Breakeven Divergence): KEPT — 2.6x ratio robust, central to Pillar 1.
+#   A5 (Carry): KEPT — mechanically correct, needs rebuild for new expression.
+#
+# statistical_tests.py:
+#   All 8 tests remain valid diagnostics. Key findings:
+#   - HAC corrections essential (Ljung-Box significant on most regressions)
+#   - Bootstrap CI on BE ratio [2.19, 3.15] excludes 1.0 (robust)
+#   - Rolling beta(TP) positive 100% of windows (stable)
+#
+# thesis_audit_analyses.py:
+#   A7 (Oil→CPI): KEPT — headline >> core confirmed (~3x ratio in changes)
+#   A8 (Taylor Rule): DOWNGRADED — VIF=10.3, horse race useless
+#   A10 (Deficit→TP): DOWNGRADED — spurious in levels, wrong sign in changes
+#   A11 (Fed BS→TP): KEPT WITH CAVEAT — changes p=0.07, correct direction
+#
+# See src/ for the new analysis suite and docs/thesis_restructured.md for
+# the restructured thesis.
+# ═══════════════════════════════════════════════════════════════
+
 """
 Thesis Audit — New Analyses (07, 08, 10, 11)
 =============================================
@@ -21,11 +52,14 @@ import matplotlib.dates as mdates
 from scipy import stats
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import OLS
+from statsmodels.tsa.stattools import adfuller, kpss, coint
+from statsmodels.stats.diagnostic import acorr_ljungbox
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 import warnings
 warnings.filterwarnings("ignore")
 
-DATA_FILE = "17.3_data_steepener_updated.xlsx"
-BLOOMBERG_FILE = "data_steepener_updated.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
+BLOOMBERG_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING
@@ -513,6 +547,178 @@ print(f"Trend: {trend}")
 
 
 # ═════════════════════════════════════════════════════════
+# DIAGNOSTIC SUMMARY (D1-D4)
+# ═════════════════════════════════════════════════════════
+
+def stationarity_conclusion(adf_pval, kpss_pval):
+    adf_reject = adf_pval < 0.05
+    kpss_reject = kpss_pval < 0.05
+    if adf_reject and not kpss_reject:
+        return "I(0) - Stationary"
+    elif not adf_reject and kpss_reject:
+        return "I(1) - Non-stationary"
+    elif adf_reject and kpss_reject:
+        return "Ambiguous (both reject)"
+    else:
+        return "Ambiguous (neither rejects)"
+
+# ═══ D1: STATIONARITY ON ALL THESIS AUDIT SERIES ═══
+print("\n" + "=" * 75)
+print("DIAGNOSTIC D1: Stationarity Tests (ADF + KPSS) on Thesis Audit Series")
+print("=" * 75)
+
+d1_series = {
+    "Oil YoY (%)":          oil_yoy.dropna(),
+    "CPI YoY (%)":          cpi_yoy.dropna(),
+    "Core PCE YoY (%)":     core_pce_yoy.dropna(),
+    "Headline PCE YoY (%)": headline_pce_yoy.dropna(),
+    "Fed Funds (%)":        fed_funds_monthly.dropna(),
+    "Unemployment (%)":     unemployment.dropna(),
+    "Deficit 12M ($B)":     a10_clean["deficit_12m_abs"],
+    "ACM TP (%)":           acm_monthly.dropna(),
+    "Fed BS ($B)":          fed_bs_monthly.dropna(),
+}
+
+d1_results = {}
+print(f"\n{'Series':<24} {'ADF p (level)':<14} {'KPSS p (level)':<15} {'Verdict (level)':<28} {'ADF p (diff)':<14} {'Verdict (diff)':<28}")
+print("-" * 130)
+
+for name, s in d1_series.items():
+    s_clean = s.dropna()
+    if len(s_clean) < 20:
+        print(f"{name:<24} {'insufficient data'}")
+        continue
+    adf_p = adfuller(s_clean, autolag="AIC")[1]
+    kpss_p = kpss(s_clean, regression="c", nlags="auto")[1]
+    concl_level = stationarity_conclusion(adf_p, kpss_p)
+    s_diff = s_clean.diff().dropna()
+    adf_p_d = adfuller(s_diff, autolag="AIC")[1]
+    kpss_p_d = kpss(s_diff, regression="c", nlags="auto")[1]
+    concl_diff = stationarity_conclusion(adf_p_d, kpss_p_d)
+    d1_results[name] = {"adf_p": adf_p, "kpss_p": kpss_p, "level": concl_level,
+                         "adf_p_d": adf_p_d, "diff": concl_diff}
+    print(f"{name:<24} {adf_p:<14.4f} {kpss_p:<15.4f} {concl_level:<28} {adf_p_d:<14.4f} {concl_diff:<28}")
+
+# Flag spurious regressions
+acm_i1 = "I(1)" in d1_results.get("ACM TP (%)", {}).get("level", "")
+fedbs_i1 = "I(1)" in d1_results.get("Fed BS ($B)", {}).get("level", "")
+deficit_i1 = "I(1)" in d1_results.get("Deficit 12M ($B)", {}).get("level", "")
+
+print()
+if acm_i1 and fedbs_i1:
+    print("  *** WARNING: ACM TP and Fed BS are both I(1) in levels.")
+    print("      A11 levels regression (r={:.3f}) is LIKELY SPURIOUS. Lead with changes regression.".format(corr_bs_level))
+if acm_i1 and deficit_i1:
+    print("  *** WARNING: ACM TP and Deficit 12M are both I(1) in levels.")
+    print("      A10 levels regression may be spurious. See cointegration test (D1b).")
+
+
+# ═══ D1b: COINTEGRATION TEST (ENGLE-GRANGER) ═══
+print("\n" + "=" * 75)
+print("DIAGNOSTIC D1b: Cointegration Tests (Engle-Granger)")
+print("=" * 75)
+
+# A11: Fed BS vs ACM TP
+coint_stat_11, coint_p_11, _ = coint(a11_clean["fed_bs"], a11_clean["acm_tp"])
+print(f"\n  A11 (Fed BS vs ACM TP):")
+print(f"    EG test statistic: {coint_stat_11:.4f}")
+print(f"    p-value: {coint_p_11:.4f}")
+if coint_p_11 < 0.05:
+    a11_coint_verdict = "COINTEGRATED (levels regression captures real long-run relationship)"
+else:
+    a11_coint_verdict = "NOT cointegrated (levels regression is SPURIOUS)"
+print(f"    Verdict: {a11_coint_verdict}")
+
+# A10: Deficit vs ACM TP
+coint_stat_10, coint_p_10, _ = coint(a10_clean["deficit_12m_abs"], a10_clean["acm_tp"])
+print(f"\n  A10 (Deficit 12M vs ACM TP):")
+print(f"    EG test statistic: {coint_stat_10:.4f}")
+print(f"    p-value: {coint_p_10:.4f}")
+if coint_p_10 < 0.05:
+    a10_coint_verdict = "COINTEGRATED (levels regression captures real long-run relationship)"
+else:
+    a10_coint_verdict = "NOT cointegrated (levels regression is SPURIOUS)"
+print(f"    Verdict: {a10_coint_verdict}")
+
+
+# ═══ D2: VIF ON A08 TAYLOR RULE HORSE RACE ═══
+print("\n" + "=" * 75)
+print("DIAGNOSTIC D2: VIF on A08 Taylor Rule Horse Race")
+print("=" * 75)
+
+X_vif_08 = sm.add_constant(a08[["core_pce_yoy", "headline_pce_yoy"]].values)
+vif_core_08 = variance_inflation_factor(X_vif_08, 1)
+vif_head_08 = variance_inflation_factor(X_vif_08, 2)
+corr_ch = a08["core_pce_yoy"].corr(a08["headline_pce_yoy"])
+
+print(f"\n  VIF(Core PCE YoY):     {vif_core_08:.2f}")
+print(f"  VIF(Headline PCE YoY): {vif_head_08:.2f}")
+print(f"  Correlation(Core, Headline): {corr_ch:.4f}")
+
+if max(vif_core_08, vif_head_08) >= 10:
+    d2_verdict = "SEVERE MULTICOLLINEARITY"
+    print(f"\n  *** {d2_verdict}. Horse race CANNOT reliably distinguish core from headline.")
+    print(f"      Do NOT claim headline dominates. Report both models separately.")
+elif max(vif_core_08, vif_head_08) >= 5:
+    d2_verdict = "MODERATE multicollinearity"
+    print(f"\n  {d2_verdict}. Interpret horse race coefficients with caution.")
+else:
+    d2_verdict = "No multicollinearity concern"
+    print(f"\n  {d2_verdict} (VIF < 5).")
+
+
+# ═══ D3: LJUNG-BOX ON A07/A08/A10/A11 RESIDUALS ═══
+print("\n" + "=" * 75)
+print("DIAGNOSTIC D3: Ljung-Box Autocorrelation on Thesis Audit Residuals")
+print("=" * 75)
+
+d3_models = [
+    ("A07: Oil->Headline CPI", model_cpi),
+    ("A07: Oil->Core PCE", model_core),
+    ("A08: Core TR (levels)", model_core_tr),
+    ("A08: Headline TR (levels)", model_head_tr),
+    ("A10: Deficit->TP (levels)", model_def_level),
+    ("A11: Fed BS->TP (levels)", model_bs_level),
+]
+
+lags_to_test = [5, 10]
+print(f"\n{'Regression':<35}", end="")
+for lag in lags_to_test:
+    print(f"  {'LB(' + str(lag) + ') p':>10}", end="")
+print(f"  {'Autocorrelation?':>18}")
+print("-" * 85)
+
+for name, model in d3_models:
+    print(f"{name:<35}", end="")
+    any_sig = False
+    for lag in lags_to_test:
+        lb_result = acorr_ljungbox(model.resid, lags=[lag], return_df=True)
+        lb_pval = lb_result["lb_pvalue"].values[0]
+        flag = "*" if lb_pval < 0.05 else " "
+        if lb_pval < 0.05:
+            any_sig = True
+        print(f"  {lb_pval:>9.4f}{flag}", end="")
+    print(f"  {'YES - HAC warranted' if any_sig else 'No':>18}")
+
+print("\n  Ljung-Box detected autocorrelation -> HAC standard errors are warranted.")
+print("  All regressions above use HAC, which corrects for the autocorrelation detected here.")
+
+
+# ═══ D4: DIAGNOSTIC → ANALYSIS MAPPING ═══
+print("\n" + "=" * 75)
+print("DIAGNOSTIC D4: Diagnostic -> Analysis Mapping")
+print("=" * 75)
+
+print(f"""
+  Analysis 07 (Oil->CPI):     HAC SEs warranted (D3). Stationarity checked (D1).
+  Analysis 08 (Taylor Rule):  VIF={max(vif_core_08, vif_head_08):.1f} -> horse race {'UNRELIABLE' if max(vif_core_08, vif_head_08) >= 10 else 'interpret with caution' if max(vif_core_08, vif_head_08) >= 5 else 'reliable'} (D2).
+  Analysis 10 (Deficit->TP):  {'I(1)/I(1)' if acm_i1 and deficit_i1 else 'Mixed order'} -> {a10_coint_verdict.split('(')[0].strip()} (D1/D1b).
+  Analysis 11 (Fed BS->TP):   {'I(1)/I(1)' if acm_i1 and fedbs_i1 else 'Mixed order'} -> {a11_coint_verdict.split('(')[0].strip()} (D1/D1b).
+  All regressions:            HAC SEs throughout (D3 confirms warranted).
+""")
+
+
+# ═════════════════════════════════════════════════════════
 # FIGURE
 # ═════════════════════════════════════════════════════════
 print("\nGenerating charts...")
@@ -640,8 +846,8 @@ ax.text(0.05, 0.95, f"beta={model_bs_level.params[1]:+.8f}\nR²={model_bs_level.
         bbox=dict(boxstyle="round,pad=0.4", facecolor="wheat", alpha=0.8))
 
 plt.tight_layout(rect=[0, 0, 1, 0.98])
-plt.savefig("thesis_audit_results.png", dpi=150, bbox_inches="tight")
-print(f"\nCharts saved to thesis_audit_results.png")
+plt.savefig("../output/thesis_audit_results.png", dpi=150, bbox_inches="tight")
+print(f"\nCharts saved to ../output/thesis_audit_results.png")
 
 
 # ═════════════════════════════════════════════════════════
@@ -678,3 +884,129 @@ CORE PCE STATUS (for claim F5):
   Latest Core CPI YoY: {core_cpi_yoy.dropna().iloc[-1]:.2f}%
   Core PCE is {'above' if core_pce_yoy.dropna().iloc[-1] > 3.0 else 'below'} 3% — {'NOT declining as claimed' if core_pce_yoy.dropna().iloc[-1] > 3.0 else 'declining'}
 """)
+
+
+# ═════════════════════════════════════════════════════════
+# WRITE RESULTS FILE
+# ═════════════════════════════════════════════════════════
+results_path = "../output/thesis_audit_results.txt"
+with open(results_path, "w") as f:
+    f.write(f"Generated: {pd.Timestamp.now():%Y-%m-%d %H:%M}\n")
+    f.write("=" * 75 + "\n")
+    f.write("THESIS AUDIT RESULTS\n")
+    f.write("=" * 75 + "\n\n")
+
+    # A07
+    f.write("A07: Oil -> CPI Passthrough\n")
+    f.write(f"{'Dep Var':<25} {'Oil Beta':>10} {'SE(HAC)':>10} {'p-value':>10} {'R2':>8}\n")
+    f.write("-" * 65 + "\n")
+    for name, model in [("Headline CPI YoY", model_cpi),
+                         ("Core PCE YoY", model_core),
+                         ("Headline PCE YoY", model_head_pce)]:
+        f.write(f"{name:<25} {model.params[1]:>+10.4f} {model.bse[1]:>10.4f} {model.pvalues[1]:>10.4f} {model.rsquared:>8.4f}\n")
+    f.write(f"\nPer 10% oil increase:\n")
+    f.write(f"  Headline CPI: {beta_headline * 10 * 100:+.0f}bp\n")
+    f.write(f"  Core PCE:     {beta_core_pce * 10 * 100:+.0f}bp\n")
+    f.write(f"  Headline PCE: {beta_headline_pce * 10 * 100:+.0f}bp\n")
+    f.write(f"  Ratio (Headline/Core): {abs(beta_headline / beta_core_pce):.1f}x\n")
+    f.write(f"  MS comparison: ~35bp headline, ~3bp core\n\n")
+
+    # 3M changes
+    f.write("A07 (3M changes):\n")
+    for name, model in [("d(Headline CPI YoY)", model_d_cpi),
+                         ("d(Core PCE YoY)", model_d_core),
+                         ("d(Headline PCE YoY)", model_d_head)]:
+        f.write(f"  {name:<25} beta={model.params[1]:+.4f} p={model.pvalues[1]:.4f} R2={model.rsquared:.4f}\n")
+    f.write("\n")
+
+    # A08
+    f.write("A08: Taylor Rule\n")
+    f.write(f"{'Model':<30} {'R2':>8} {'AIC':>10}\n")
+    f.write("-" * 50 + "\n")
+    f.write(f"{'Core PCE + Unemployment':<30} {model_core_tr.rsquared:>8.4f} {model_core_tr.aic:>10.1f}\n")
+    f.write(f"{'Headline PCE + Unemployment':<30} {model_head_tr.rsquared:>8.4f} {model_head_tr.aic:>10.1f}\n\n")
+    f.write(f"Core-only:     beta(core)={model_core_tr.params[1]:+.4f} p={model_core_tr.pvalues[1]:.4f}, beta(unemp)={model_core_tr.params[2]:+.4f} p={model_core_tr.pvalues[2]:.4f}\n")
+    f.write(f"Headline-only: beta(head)={model_head_tr.params[1]:+.4f} p={model_head_tr.pvalues[1]:.4f}, beta(unemp)={model_head_tr.params[2]:+.4f} p={model_head_tr.pvalues[2]:.4f}\n")
+    f.write(f"Horse race:    beta(core)={model_both_tr.params[1]:+.4f} p={model_both_tr.pvalues[1]:.4f}, beta(head)={model_both_tr.params[2]:+.4f} p={model_both_tr.pvalues[2]:.4f}\n\n")
+    f.write(f"Changes models:\n")
+    f.write(f"  d(Core):     beta={model_d1.params[1]:+.4f} p={model_d1.pvalues[1]:.4f} R2={model_d1.rsquared:.4f}\n")
+    f.write(f"  d(Headline): beta={model_d2.params[1]:+.4f} p={model_d2.pvalues[1]:.4f} R2={model_d2.rsquared:.4f}\n")
+    f.write(f"  Horse race:  beta(core)={model_d3.params[1]:+.4f} p={model_d3.pvalues[1]:.4f}, beta(head)={model_d3.params[2]:+.4f} p={model_d3.pvalues[2]:.4f}\n")
+    f.write(f"  Core-Headline PCE correlation: {corr_ch:.4f}\n\n")
+
+    # A10
+    f.write("A10: Deficit -> Term Premium\n")
+    f.write(f"  Levels: beta={model_def_level.params[1]:+.6f} t={model_def_level.tvalues[1]:+.2f} p={model_def_level.pvalues[1]:.4f} R2={model_def_level.rsquared:.4f}\n")
+    f.write(f"  Per $100B: {model_def_level.params[1] * 100:+.3f}pp\n")
+    f.write(f"  Changes: beta={model_def_change.params[1]:+.6f} t={model_def_change.tvalues[1]:+.2f} p={model_def_change.pvalues[1]:.4f} R2={model_def_change.rsquared:.4f}\n")
+    f.write(f"  Corr (levels): {corr_level:+.4f}  Corr (changes): {corr_change:+.4f}\n")
+    f.write(f"  Latest: 12M deficit=${a10_clean['deficit_12m_abs'].iloc[-1]:.0f}B, ACM TP={a10_clean['acm_tp'].iloc[-1]:.3f}%\n\n")
+
+    # A11
+    f.write("A11: Fed BS -> Term Premium\n")
+    f.write(f"  Levels: beta={model_bs_level.params[1]:+.8f} t={model_bs_level.tvalues[1]:+.2f} p={model_bs_level.pvalues[1]:.4f} R2={model_bs_level.rsquared:.4f}\n")
+    f.write(f"  Per $100B reduction: {-model_bs_level.params[1] * 100:+.4f}pp\n")
+    f.write(f"  Changes: beta={model_bs_change.params[1]:+.8f} t={model_bs_change.tvalues[1]:+.2f} p={model_bs_change.pvalues[1]:.4f} R2={model_bs_change.rsquared:.4f}\n")
+    f.write(f"  Corr (levels): {corr_bs_level:+.4f}  Corr (changes): {corr_bs_change:+.4f}\n")
+    f.write(f"  Latest: Fed BS=${a11_clean['fed_bs'].iloc[-1]:.0f}B, ACM TP={a11_clean['acm_tp'].iloc[-1]:.3f}%\n")
+    if model_bs_level.rsquared > 0.50:
+        f.write(f"  *** FLAG: Levels R2={model_bs_level.rsquared:.4f} > 0.50 — LIKELY SPURIOUS, see D1/D1b\n")
+    f.write("\n")
+
+    # F5
+    f.write("F5: Core PCE Status\n")
+    f.write(f"  Latest Core PCE YoY: {core_pce_yoy.dropna().iloc[-1]:.2f}%\n")
+    f.write(f"  Latest Core CPI YoY: {core_cpi_yoy.dropna().iloc[-1]:.2f}%\n")
+    f.write(f"  Gap (PCE - CPI): {core_pce_yoy.dropna().iloc[-1] - core_cpi_yoy.dropna().iloc[-1]:.2f}pp\n")
+    f.write(f"  Last 6 months Core PCE YoY:\n")
+    for date, val in recent_core_pce.items():
+        f.write(f"    {date.strftime('%Y-%m')}: {val:.2f}%\n")
+    f.write(f"  Trend: {trend}\n\n")
+
+    # Diagnostics
+    f.write("=" * 75 + "\n")
+    f.write("DIAGNOSTICS\n")
+    f.write("=" * 75 + "\n\n")
+
+    # D1
+    f.write("D1: Stationarity\n")
+    f.write(f"{'Series':<24} {'ADF p':>8} {'KPSS p':>8} {'Verdict (level)':<28} {'Verdict (diff)':<28}\n")
+    f.write("-" * 100 + "\n")
+    for name, res in d1_results.items():
+        f.write(f"{name:<24} {res['adf_p']:>8.4f} {res['kpss_p']:>8.4f} {res['level']:<28} {res['diff']:<28}\n")
+    f.write("\n")
+
+    # D1b
+    f.write("D1b: Cointegration (Engle-Granger)\n")
+    f.write(f"  A10 (Deficit vs ACM TP): EG stat={coint_stat_10:.4f}, p={coint_p_10:.4f}\n")
+    f.write(f"    Verdict: {a10_coint_verdict}\n")
+    f.write(f"  A11 (Fed BS vs ACM TP):  EG stat={coint_stat_11:.4f}, p={coint_p_11:.4f}\n")
+    f.write(f"    Verdict: {a11_coint_verdict}\n\n")
+
+    # D2
+    f.write("D2: VIF on A08 Horse Race\n")
+    f.write(f"  VIF(Core PCE):     {vif_core_08:.2f}\n")
+    f.write(f"  VIF(Headline PCE): {vif_head_08:.2f}\n")
+    f.write(f"  Correlation:       {corr_ch:.4f}\n")
+    f.write(f"  Verdict: {d2_verdict}\n\n")
+
+    # D3
+    f.write("D3: Ljung-Box Autocorrelation\n")
+    f.write(f"{'Regression':<35} {'LB(5) p':>10} {'LB(10) p':>10} {'Autocorr?':>12}\n")
+    f.write("-" * 70 + "\n")
+    for name, model in d3_models:
+        lb5 = acorr_ljungbox(model.resid, lags=[5], return_df=True)["lb_pvalue"].values[0]
+        lb10 = acorr_ljungbox(model.resid, lags=[10], return_df=True)["lb_pvalue"].values[0]
+        any_sig = lb5 < 0.05 or lb10 < 0.05
+        f.write(f"{name:<35} {lb5:>10.4f} {lb10:>10.4f} {'YES' if any_sig else 'No':>12}\n")
+    f.write("\n")
+
+    # D4
+    f.write("D4: Diagnostic -> Analysis Mapping\n")
+    f.write(f"  A07 (Oil->CPI):     HAC SEs warranted (D3)\n")
+    f.write(f"  A08 (Taylor Rule):  VIF={max(vif_core_08, vif_head_08):.1f} (D2)\n")
+    f.write(f"  A10 (Deficit->TP):  {a10_coint_verdict.split('(')[0].strip()} (D1/D1b)\n")
+    f.write(f"  A11 (Fed BS->TP):   {a11_coint_verdict.split('(')[0].strip()} (D1/D1b)\n")
+    f.write(f"  All regressions:    HAC SEs throughout (D3)\n")
+
+print(f"Results written to {results_path}")

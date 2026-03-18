@@ -1,3 +1,34 @@
+# ═══════════════════════════════════════════════════════════════
+# LEGACY FILE — DO NOT USE FOR CURRENT THESIS
+# ═══════════════════════════════════════════════════════════════
+# This file contains the ORIGINAL analyses from thesis v1.
+# After rigorous sniff-testing and statistical audit, the following
+# were found to be problematic:
+#
+# analysis.py:
+#   A1 (Oil→Curve): REFRAMED — p=0.80, no relationship. Oil flattens, not steepens.
+#   A4 (Regime Study): KILLED — contradicts thesis (flattening at all horizons).
+#   A6 (2Y Mean Reversion): KILLED — statistical noise, IQRs span hundreds of %.
+#   A2 (Term Premium): KEPT — strongest result, central to Pillar 2.
+#   A3 (Breakeven Divergence): KEPT — 2.6x ratio robust, central to Pillar 1.
+#   A5 (Carry): KEPT — mechanically correct, needs rebuild for new expression.
+#
+# statistical_tests.py:
+#   All 8 tests remain valid diagnostics. Key findings:
+#   - HAC corrections essential (Ljung-Box significant on most regressions)
+#   - Bootstrap CI on BE ratio [2.19, 3.15] excludes 1.0 (robust)
+#   - Rolling beta(TP) positive 100% of windows (stable)
+#
+# thesis_audit_analyses.py:
+#   A7 (Oil→CPI): KEPT — headline >> core confirmed (~3x ratio in changes)
+#   A8 (Taylor Rule): DOWNGRADED — VIF=10.3, horse race useless
+#   A10 (Deficit→TP): DOWNGRADED — spurious in levels, wrong sign in changes
+#   A11 (Fed BS→TP): KEPT WITH CAVEAT — changes p=0.07, correct direction
+#
+# See src/ for the new analysis suite and docs/thesis_restructured.md for
+# the restructured thesis.
+# ═══════════════════════════════════════════════════════════════
+
 """
 Steepener Trade Thesis — Statistical Tests
 ============================================
@@ -35,7 +66,7 @@ from statsmodels.tsa.stattools import adfuller, kpss
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.regression.linear_model import OLS
 
-DATA_FILE = "data steepener.xlsx"
+DATA_FILE = "../data/data_steepener.xlsx"
 
 # ─────────────────────────────────────────────────────────
 # DATA LOADING (same pattern as analysis.py)
@@ -395,8 +426,8 @@ ax.set_title("Rolling 252-Day Regression Betas: d(Spread) = b0 + b1*d(Rate Exp) 
 ax.legend(loc="best", fontsize=9)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig("rolling_betas.png", dpi=150, bbox_inches="tight")
-print(f"\n  Chart saved to rolling_betas.png")
+plt.savefig("../output/rolling_betas.png", dpi=150, bbox_inches="tight")
+print(f"\n  Chart saved to ../output/rolling_betas.png")
 
 
 # ─────────────────────────────────────────────────────────
@@ -554,8 +585,8 @@ ax.set_title(f"Permutation Test: Oil Shock vs Normal Regime Spread Outcome\n"
 ax.legend(fontsize=10)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig("permutation_test.png", dpi=150, bbox_inches="tight")
-print(f"  Histogram saved to permutation_test.png")
+plt.savefig("../output/permutation_test.png", dpi=150, bbox_inches="tight")
+print(f"  Histogram saved to ../output/permutation_test.png")
 
 
 # ─────────────────────────────────────────────────────────
@@ -619,3 +650,117 @@ Key questions answered:
   7. Permutation: Is the oil regime effect real or noise?
   8. Sensitivity: Does the regime result depend on threshold choice?
 """)
+
+
+# ═════════════════════════════════════════════════════════
+# WRITE RESULTS FILE
+# ═════════════════════════════════════════════════════════
+results_path = "../output/statistical_tests_results.txt"
+with open(results_path, "w") as f:
+    f.write(f"Generated: {pd.Timestamp.now():%Y-%m-%d %H:%M}\n")
+    f.write("=" * 75 + "\n")
+    f.write("STATISTICAL TESTS RESULTS (T1-T8)\n")
+    f.write("=" * 75 + "\n\n")
+
+    # T1: HAC SEs
+    f.write("T1: Newey-West HAC Standard Errors\n")
+    f.write(f"{'Regression':<45} {'Coef':>8} {'OLS SE':>10} {'HAC SE':>10} {'OLS p':>10} {'HAC p':>10}\n")
+    f.write("-" * 95 + "\n")
+    for reg in all_regs:
+        for i, pname in enumerate(reg["param_names"]):
+            if pname == "const":
+                continue
+            label = f"{reg['name']} [x{i}]" if len(reg["param_names"]) > 2 else reg["name"]
+            f.write(f"{label:<45} {reg['params'][i]:>+8.4f} {reg['se_ols'][i]:>10.4f} {reg['se_hac'][i]:>10.4f} "
+                    f"{reg['pval_ols'][i]:>10.4f} {reg['pval_hac'][i]:>10.4f}\n")
+    f.write("\n")
+
+    # T2: Stationarity
+    f.write("T2: Stationarity (ADF + KPSS)\n")
+    f.write(f"{'Series':<22} {'ADF p (lvl)':>12} {'KPSS p (lvl)':>13} {'Verdict (lvl)':<28} {'ADF p (diff)':>13} {'Verdict (diff)':<28}\n")
+    f.write("-" * 120 + "\n")
+    for name, s in series_dict.items():
+        s_clean = s.dropna()
+        adf_p = adfuller(s_clean, autolag="AIC")[1]
+        kpss_p = kpss(s_clean, regression="c", nlags="auto")[1]
+        concl_level = stationarity_conclusion(adf_p, kpss_p)
+        s_diff = s_clean.diff().dropna()
+        adf_p_d = adfuller(s_diff, autolag="AIC")[1]
+        kpss_p_d = kpss(s_diff, regression="c", nlags="auto")[1]
+        concl_diff = stationarity_conclusion(adf_p_d, kpss_p_d)
+        f.write(f"{name:<22} {adf_p:>12.4f} {kpss_p:>13.4f} {concl_level:<28} {adf_p_d:>13.4f} {concl_diff:<28}\n")
+    f.write("\n")
+
+    # T3: VIF
+    f.write("T3: VIF on Analysis 2\n")
+    f.write(f"  VIF(rate_exp):   {vif_rate_exp:.3f}\n")
+    f.write(f"  VIF(term_prem):  {vif_term_prem:.3f}\n")
+    f.write(f"  Correlation:     {corr_re_tp:.4f}\n\n")
+
+    # T4: Ljung-Box
+    f.write("T4: Ljung-Box Autocorrelation\n")
+    f.write(f"{'Regression':<35}")
+    for lag in lags_to_test:
+        f.write(f" {'LB('+str(lag)+') p':>10}")
+    f.write("\n" + "-" * 60 + "\n")
+    for resid, name in residual_sets:
+        f.write(f"{name:<35}")
+        for lag in lags_to_test:
+            lb_result = acorr_ljungbox(resid, lags=[lag], return_df=True)
+            lb_pval = lb_result["lb_pvalue"].values[0]
+            f.write(f" {lb_pval:>10.4f}")
+        f.write("\n")
+    f.write("\n")
+
+    # T5: Rolling Betas
+    f.write("T5: Rolling 252-Day Betas (Analysis 2)\n")
+    f.write(f"  {'Stat':<20} {'beta(RateExp)':>14} {'beta(TermPrem)':>15}\n")
+    f.write(f"  {'Full-sample':<20} {b_full[1]:>+14.4f} {b_full[2]:>+15.4f}\n")
+    f.write(f"  {'Rolling mean':<20} {beta_re_arr.mean():>+14.4f} {beta_tp_arr.mean():>+15.4f}\n")
+    f.write(f"  {'Rolling std':<20} {beta_re_arr.std():>14.4f} {beta_tp_arr.std():>15.4f}\n")
+    f.write(f"  {'Rolling min':<20} {beta_re_arr.min():>+14.4f} {beta_tp_arr.min():>+15.4f}\n")
+    f.write(f"  {'Rolling max':<20} {beta_re_arr.max():>+14.4f} {beta_tp_arr.max():>+15.4f}\n")
+    pct_pos_tp = np.mean(beta_tp_arr > 0) * 100
+    f.write(f"  % positive beta(TP): {pct_pos_tp:.0f}%\n\n")
+
+    # T6: Bootstrap CIs
+    f.write("T6: Bootstrap Confidence Intervals (90%)\n")
+    f.write(f"  {'Statistic':<30} {'Point Est':>12} {'5th Pctile':>12} {'95th Pctile':>12}\n")
+    f.write("  " + "-" * 68 + "\n")
+    for name_bs, point, boots in [
+        ("beta(Term Premium)", b_fs[2], boot_beta_tp),
+        ("beta(Rate Expectations)", b_fs[1], boot_beta_re),
+        ("2Y/10Y BE Oil Sensitivity", be_ratio_fs, boot_be_ratio),
+        ("R-squared (Analysis 2)", r2_fs, boot_r2),
+    ]:
+        b_clean = boots[~np.isnan(boots)]
+        p5 = np.percentile(b_clean, 5)
+        p95 = np.percentile(b_clean, 95)
+        f.write(f"  {name_bs:<30} {point:>12.4f} {p5:>12.4f} {p95:>12.4f}\n")
+    f.write("\n")
+
+    # T7: Permutation Test
+    f.write("T7: Permutation Test (Oil Regime)\n")
+    f.write(f"  Shock mean: {actual_shock_mean:+.3f}bp\n")
+    f.write(f"  Normal mean: {actual_normal_mean:+.3f}bp\n")
+    f.write(f"  Gap: {actual_gap:+.3f}bp\n")
+    f.write(f"  p-value: {perm_pval:.4f}\n\n")
+
+    # T8: Threshold Sensitivity
+    f.write("T8: Threshold Sensitivity\n")
+    f.write(f"  {'Thresh':>6} {'Window':>8}")
+    f.write(f" {'Shock Mean':>12} {'Normal Mean':>12} {'Gap':>10}\n")
+    f.write("  " + "-" * 50 + "\n")
+    for thresh in thresholds:
+        for wname, wdays in windows_months.items():
+            oil_roll = daily["oil"].pct_change(periods=wdays) * 100
+            spread_fwd_w = daily["spread"].shift(-wdays) - daily["spread"]
+            df_temp = pd.DataFrame({"oil_roll": oil_roll, "spread_fwd": spread_fwd_w}).dropna()
+            shock_m = df_temp["oil_roll"].abs() > thresh
+            if shock_m.sum() > 0:
+                s_mean = df_temp.loc[shock_m, "spread_fwd"].mean()
+                n_mean = df_temp.loc[~shock_m, "spread_fwd"].mean()
+                gap = s_mean - n_mean
+                f.write(f"  {thresh:>5d}% {wname:>8} {s_mean:>+12.2f} {n_mean:>+12.2f} {gap:>+10.2f}\n")
+
+print(f"Results written to {results_path}")

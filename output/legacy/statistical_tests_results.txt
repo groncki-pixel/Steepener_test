@@ -1,0 +1,81 @@
+Generated: 2026-03-18 12:55
+===========================================================================
+STATISTICAL TESTS RESULTS (T1-T8)
+===========================================================================
+
+T1: Newey-West HAC Standard Errors
+Regression                                        Coef     OLS SE     HAC SE      OLS p      HAC p
+-----------------------------------------------------------------------------------------------
+A1a: Oil% -> d(Spread) [weekly]                +0.0385     0.1043     0.1537     0.7124     0.8022
+A1b: Oil% -> d(2Y) [weekly]                    +0.0043     0.0016     0.0023     0.0081     0.0543
+A1c: Oil% -> d(10Y) [weekly]                   +0.0047     0.0015     0.0019     0.0020     0.0133
+A2: d(RateExp)+d(TP) -> d(Spread) [daily] [x1] -12.9399     1.9688     6.2939     0.0000     0.0398
+A2: d(RateExp)+d(TP) -> d(Spread) [daily] [x2] +32.8482     1.7625     3.8391     0.0000     0.0000
+A3a: Oil% -> d(2Y BE) [weekly]                 +0.0149     0.0016     0.0022     0.0000     0.0000
+A3b: Oil% -> d(10Y BE) [weekly]                +0.0057     0.0008     0.0009     0.0000     0.0000
+
+T2: Stationarity (ADF + KPSS)
+Series                  ADF p (lvl)  KPSS p (lvl) Verdict (lvl)                 ADF p (diff) Verdict (diff)              
+------------------------------------------------------------------------------------------------------------------------
+Spread (2s10s)               0.2510        0.0100 I(1) - Non-stationary               0.0000 Ambiguous (both reject)     
+ACM Term Premium             0.5462        0.0100 I(1) - Non-stationary               0.0000 I(0) - Stationary           
+Rate Expectations            0.0903        0.0100 I(1) - Non-stationary               0.0000 Ambiguous (both reject)     
+2Y Breakeven                 0.2147        0.0100 I(1) - Non-stationary               0.0000 I(0) - Stationary           
+10Y Breakeven                0.0107        0.0100 Ambiguous (both reject)             0.0000 I(0) - Stationary           
+Oil (WTI)                    0.1668        0.0100 I(1) - Non-stationary               0.0000 I(0) - Stationary           
+2Y Yield                     0.1975        0.0100 I(1) - Non-stationary               0.0000 Ambiguous (both reject)     
+10Y Yield                    0.5209        0.0100 I(1) - Non-stationary               0.0000 I(0) - Stationary           
+
+T3: VIF on Analysis 2
+  VIF(rate_exp):   1.283
+  VIF(term_prem):  1.283
+  Correlation:     -0.4695
+
+T4: Ljung-Box Autocorrelation
+Regression                             LB(5) p   LB(10) p   LB(20) p
+------------------------------------------------------------
+A1a: Oil% -> d(Spread)                  0.1507     0.1725     0.3592
+A1b: Oil% -> d(2Y)                      0.9450     0.7429     0.8890
+A1c: Oil% -> d(10Y)                     0.5790     0.8786     0.5877
+A2: d(RE)+d(TP) -> d(Spread)            0.0000     0.0000     0.0000
+A3a: Oil% -> d(2Y BE)                   0.0399     0.0025     0.0035
+A3b: Oil% -> d(10Y BE)                  0.0949     0.0378     0.0150
+
+T5: Rolling 252-Day Betas (Analysis 2)
+  Stat                  beta(RateExp)  beta(TermPrem)
+  Full-sample                -12.9399        +32.8482
+  Rolling mean               -18.1157        +34.2014
+  Rolling std                  9.9354         11.9975
+  Rolling min                -37.5286        +11.2155
+  Rolling max                 +7.0703        +61.8259
+  % positive beta(TP): 100%
+
+T6: Bootstrap Confidence Intervals (90%)
+  Statistic                         Point Est   5th Pctile  95th Pctile
+  --------------------------------------------------------------------
+  beta(Term Premium)                  32.8482      28.4628      37.6565
+  beta(Rate Expectations)            -12.9399     -20.1629      -6.1865
+  2Y/10Y BE Oil Sensitivity            2.6122       2.1927       3.1461
+  R-squared (Analysis 2)               0.3432       0.2895       0.4111
+
+T7: Permutation Test (Oil Regime)
+  Shock mean: -14.301bp
+  Normal mean: -1.114bp
+  Gap: -13.186bp
+  p-value: 0.0000
+
+T8: Threshold Sensitivity
+  Thresh   Window   Shock Mean  Normal Mean        Gap
+  --------------------------------------------------
+     15%  1-month        -9.83        -0.83      -9.00
+     15%  3-month       -13.32        +0.99     -14.30
+     15%  6-month       -39.77       +17.17     -56.94
+     20%  1-month        -7.44        -1.36      -6.08
+     20%  3-month       -14.30        -1.11     -13.19
+     20%  6-month       -55.23       +13.66     -68.89
+     25%  1-month       -25.49        -1.39     -24.09
+     25%  3-month       -11.63        -2.10      -9.52
+     25%  6-month       -58.25        +9.07     -67.32
+     30%  1-month       -19.83        -1.45     -18.38
+     30%  3-month        -7.99        -2.48      -5.51
+     30%  6-month       -64.48        +5.54     -70.02

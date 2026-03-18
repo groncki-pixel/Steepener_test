@@ -1,0 +1,87 @@
+Generated: 2026-03-18 12:55
+===========================================================================
+STEEPENER ANALYSIS RESULTS (A1-A6)
+===========================================================================
+
+A1: Oil-Curve Asymmetry
+  Oil->Spread beta: 0.0385 bp/1% oil (HAC p=0.8022, R2=0.0005)
+  Oil->2Y beta:  0.0043 (p=0.0081)
+  Oil->10Y beta: 0.0047 (p=0.0020)
+  10Y/2Y ratio:  1.1x
+  Spike weeks (>5.0%): n=30
+    avg d(spread)=-1.01bp
+    avg d(2Y)=+0.0631%
+    avg d(10Y)=+0.0527%
+
+A2: Term Premium Decomposition
+  beta(rate_exp): -12.9399 (t=-6.57)
+  beta(term_prem): +32.8482 (t=+18.64)
+  R2: 0.3432
+  VIF(rate_exp): 1.28  VIF(term_prem): 1.28
+  Current: 10Y=4.261%, TP=0.681%, RateExp=3.580%
+  Last 6M: TP change=+0.097%, RateExp change=+0.126%
+  TP share of 10Y move: +43%
+  Rolling beta(TP): mean=+34.201 min=+11.215 max=+61.826
+  % of windows with positive beta(TP): 100%
+
+A3: Breakeven Divergence
+  Oil->2Y BE beta: 0.0149 (p=0.0000, R2=0.2582)
+  Oil->10Y BE beta: 0.0057 (p=0.0000, R2=0.1751)
+  2Y/10Y ratio: 2.6x
+  Spike weeks: avg d(2Y BE)=+0.1202%, avg d(10Y BE)=+0.0321%
+  Current BE slope: -0.808% (13th percentile)
+  BE slope persistence (median at each horizon):
+    +1w: -0.2685%
+    +2w: -0.2582%
+    +4w: -0.3213%
+    +8w: -0.3999%
+    +12w: -0.3025%
+    +16w: -0.2699%
+  Stays negative 8+ weeks: YES
+
+A4: Oil Regime Spread Outcomes
+  Threshold 15% (n=20 episodes):
+    1-month: mean dZ=-0.0325 perm_p=0.6213
+    3-month: mean dZ=-0.1514 perm_p=0.2326
+    6-month: mean dZ=-0.4730 perm_p=0.0204
+  Threshold 20% (n=15 episodes):
+    1-month: mean dZ=+0.0130 perm_p=0.8630
+    3-month: mean dZ=-0.2011 perm_p=0.1523
+    6-month: mean dZ=-0.5761 perm_p=0.0109
+  Threshold 25% (n=7 episodes):
+    1-month: mean dZ=-0.0349 perm_p=0.7538
+    3-month: mean dZ=-0.1593 perm_p=0.4143
+    6-month: mean dZ=-0.6525 perm_p=0.0425
+  Threshold 30% (n=5 episodes):
+    1-month: mean dZ=+0.0078 perm_p=0.9545
+    3-month: mean dZ=-0.2220 perm_p=0.3507
+    6-month: mean dZ=-0.6710 perm_p=0.0776
+  Threshold sensitivity (3M):
+    Thresh     N    Mean dZ   Perm p
+       15%    20    -0.1514   0.2326
+       20%    15    -0.2011   0.1523
+       25%     7    -0.1593   0.4143
+       30%     5    -0.2220   0.3507
+
+A5: Carry & Scenario P&L
+  Current: 2Y=3.741%, 10Y=4.261%, spread=51.4bp
+  Daily carry: +0.1445bp/day, monthly: +4.34bp
+  Scenario P&L (entry=50bp):
+              Spread       30d       60d       90d
+         42bp (stop)     -3.7bp     +0.7bp     +5.0bp
+                46bp     +0.3bp     +4.7bp     +9.0bp
+         54bp (unch)     +8.3bp    +12.7bp    +17.0bp
+                60bp    +14.3bp    +18.7bp    +23.0bp
+       70bp (target)    +24.3bp    +28.7bp    +33.0bp
+
+A6: 2Y Mean Reversion After Oil Spikes
+  Spike events: n=30
+  Median spike-week 2Y change: +0.0684%
+  Reversion (% of spike reversed):
+     Weeks     Median        Q25        Q75
+    +   1w      -31.0%      -73.3%      +70.2%
+    +   2w      -39.5%     -165.4%      +58.0%
+    +   4w      +30.9%     -103.9%     +141.4%
+    +   8w      +77.2%     -207.4%     +289.1%
+    +  12w      -38.3%     -486.7%     +292.5%
+  50%+ reversal by 8 weeks: YES
