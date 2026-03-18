@@ -1,3 +1,34 @@
+# ═══════════════════════════════════════════════════════════════
+# LEGACY FILE — DO NOT USE FOR CURRENT THESIS
+# ═══════════════════════════════════════════════════════════════
+# This file contains the ORIGINAL analyses from thesis v1.
+# After rigorous sniff-testing and statistical audit, the following
+# were found to be problematic:
+#
+# analysis.py:
+#   A1 (Oil→Curve): REFRAMED — p=0.80, no relationship. Oil flattens, not steepens.
+#   A4 (Regime Study): KILLED — contradicts thesis (flattening at all horizons).
+#   A6 (2Y Mean Reversion): KILLED — statistical noise, IQRs span hundreds of %.
+#   A2 (Term Premium): KEPT — strongest result, central to Pillar 2.
+#   A3 (Breakeven Divergence): KEPT — 2.6x ratio robust, central to Pillar 1.
+#   A5 (Carry): KEPT — mechanically correct, needs rebuild for new expression.
+#
+# statistical_tests.py:
+#   All 8 tests remain valid diagnostics. Key findings:
+#   - HAC corrections essential (Ljung-Box significant on most regressions)
+#   - Bootstrap CI on BE ratio [2.19, 3.15] excludes 1.0 (robust)
+#   - Rolling beta(TP) positive 100% of windows (stable)
+#
+# thesis_audit_analyses.py:
+#   A7 (Oil→CPI): KEPT — headline >> core confirmed (~3x ratio in changes)
+#   A8 (Taylor Rule): DOWNGRADED — VIF=10.3, horse race useless
+#   A10 (Deficit→TP): DOWNGRADED — spurious in levels, wrong sign in changes
+#   A11 (Fed BS→TP): KEPT WITH CAVEAT — changes p=0.07, correct direction
+#
+# See src/ for the new analysis suite and docs/thesis_restructured.md for
+# the restructured thesis.
+# ═══════════════════════════════════════════════════════════════
+
 """
 Steepener Trade Thesis — Statistical Tests
 ============================================
