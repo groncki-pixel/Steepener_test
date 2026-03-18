@@ -1,0 +1,23 @@
+Generated: 2026-03-18 18:04
+======================================================================
+NEW-3: Warsh Scenario Tree & Sensitivity Analysis
+======================================================================
+
+Current spread: 54bp
+Beta(TP): 32.85
+NEW-7 BE component: 33.9bp
+
+Bull: Warsh confirmed by May + war resolution
+  Probability: 30%
+  Spread outcome: 100bp (P&L: +45bp)
+
+Base: Warsh delayed, partial oil normalization
+  Probability: 45%
+  Spread outcome: 75bp (P&L: +20bp)
+
+Bear: Warsh blocked, oil stays elevated
+  Probability: 25%
+  Spread outcome: 41bp (P&L: -13bp)
+
+Expected spread: 74bp
+Expected P&L: +19bp

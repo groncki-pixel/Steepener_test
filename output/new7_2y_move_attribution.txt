@@ -1,0 +1,19 @@
+Generated: 2026-03-18 17:56
+======================================================================
+NEW-7: 2Y Move Attribution & Target Calibration
+======================================================================
+
+Period: 2026-02-27 to 2026-03-16
+Current spread: 54bp
+
+2Y Nominal change:    +29.6bp
+2Y Breakeven change:  +33.9bp (oil-reversible)
+2Y Real yield change: -4.2bp (Fed path / structural)
+Technical correction: ~+3.3bp (pre-war overshoot, already reversed)
+
+Oil-reversible component: 33.9bp
+Decision gate (>8bp): PASS
+
+Spread targets:
+  War-only:    ~88bp
+  War + Warsh: ~88bp

@@ -1,0 +1,17 @@
+Generated: 2026-03-18 18:04
+======================================================================
+NEW-6: Carry & Scenario P&L — New Expression
+======================================================================
+
+Note: SOFR Strips not available. Using FFR as financing proxy.
+
+Current levels (2026-03-16):
+  2Y: 3.671%  10Y: 4.216%  Spread: 54bp  FFR: 3.75%
+
+Entry: 54bp  Target: 70bp  Stop: 42bp
+Monthly carry cost: ~-4.5bp
+3M carry cost: ~-13.6bp
+
+Target P&L (70bp, 3M): +2bp
+Stop P&L (42bp, 1M): -17bp
+Risk/Reward: 0.1:1

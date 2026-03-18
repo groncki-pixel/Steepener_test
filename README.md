@@ -34,6 +34,7 @@ Steepener_test/
 │   ├── new4_breakeven_nominal_decomp.py ← BE vs nominal time series
 │   ├── new5_cftc_positioning.py       ← CFTC speculative positioning
 │   ├── new6_carry_new_expression.py   ← Carry/P&L for SOFR expression
+│   ├── new8_technical_analysis.py    ← Technical analysis (MAs, RSI, BBands, S/R)
 │   └── legacy/                        ← Original v1 analyses (deprecated)
 │       ├── analysis.py                ← A1-A6 (see deprecation header)
 │       ├── statistical_tests.py       ← T1-T8 diagnostics
@@ -85,6 +86,9 @@ python new5_cftc_positioning.py
 
 # 4. LOW priority
 python new6_carry_new_expression.py
+
+# 5. TECHNICAL
+python new8_technical_analysis.py
 ```
 
 **NEW-7 must run first** — it decomposes the 2Y move and determines whether the oil-reversible component passes the 8bp decision gate for the trade target.

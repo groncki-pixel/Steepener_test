@@ -1,0 +1,17 @@
+Generated: 2026-03-18 18:05
+======================================================================
+NEW-8: Technical Analysis — 2s10s Spread
+======================================================================
+
+Current spread: 54bp
+21D EMA: 58bp  50D SMA: 63bp  200D SMA: 56bp
+RSI(14): 45.7
+Bollinger %B: 26%  Width: 11bp
+ATR(14): 1.7bp/day
+
+MA Regime: MIXED BULLISH — 50D > 200D but price near/below 50D
+
+Support levels: 48bp, 41bp, 18bp
+Resistance levels: 63bp
+
+Signals: 0 bullish, 2 bearish, 2 neutral
