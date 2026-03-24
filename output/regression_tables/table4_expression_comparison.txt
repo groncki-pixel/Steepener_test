@@ -1,0 +1,12 @@
+TABLE 4: Trade Expression Comparison
+==============================================================================================================
+
+Expression                   Captures             Carry     Margin       R/R Suitable?         
+--------------------------------------------------------------------------------------------------------------
+Cash bond steepener          P1+P2 mixed       -4.5bp/m      $50k+     0.1:1 NO (carry,capital)
+Futures (ZT/ZN)              P1+P2 mixed        ~-2bp/m      $3-5k    ~0.5:1 NO (carry drag)   
+SOFR strip only              P1 only             ~0bp/m        $4k    Varies NO (no P2)        
+SOFR + Micro 10Y [REC]       P1+P2 isolated      ~0bp/m       $12k     2.5:1 YES               
+Options overlay              P1+P2 defined      Premium    Premium      3:1+ NO (complexity)   
+
+P1=Front-end overreaction, P2=Term premium. REC=Recommended.
