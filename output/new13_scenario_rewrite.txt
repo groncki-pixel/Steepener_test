@@ -1,0 +1,46 @@
+Generated: 2026-03-25 00:51
+================================================================================
+NEW-13: Scenario Analysis -- Market-Implied Framework
+================================================================================
+Replaces fabricated probability tree with market-observable pricing.
+
+DATA (as of 2026-03-24):
+  2Y: 3.906% | 10Y: 4.367% | Spread: 49bp | FFR: 3.75%
+  CL1: $88.78 | CL6: $74.59 | Backwardation: $14.19 (19%)
+  Implied cuts: -0.6 (pre-war: 1.5)
+  2Y move since war: +53bp with ZERO Fed action
+
+SECTION 1 -- MARKET-IMPLIED PRICING:
+  SOFR strip prices -0.6 cuts (effectively hikes). Pre-war: 1.5 cuts.
+  Oil curve: $14.19 backwardation (19%). Market prices normalisation.
+  Fed: FFR unchanged at 3.75% despite +53bp 2Y selloff.
+
+SECTION 2 -- WHERE WE DISAGREE:
+  Market prices -0.6 cuts. We think ~1.5 (conditional on transitory oil).
+  Base rate for oil being transitory: 6/6 (100%).
+  Mispricing: -53bp in the 2Y.
+
+SECTION 3 -- PAYOFF ASYMMETRY:
+  Catalyst 1: Fed signals transitory (6/6 base rate)
+  Catalyst 2: Warsh confirmed (every nominee confirmed historically)
+  Catalyst 3: Oil normalises (futures curve prices 19% decline)
+  ANY ONE reaches target. ALL THREE must fail for stop.
+
+SECTION 4 -- BREAKEVEN:
+  Entry: 49bp | Stop: 42bp | Target: 70bp
+  Distance to stop: 7bp | Distance to target: 21bp
+  R/R: 3.0:1
+
+SECTION 5 -- SENSITIVITY:
+  Target reached in 27/42 cells (64%)
+  Stop hit in 0/42 cells (0%)
+
+SECTION 6 -- RISK/REWARD:
+  Base (any two):  49 -> 70bp = +21bp | R/R 3.0:1
+  Full (all three): 49 -> 100bp = +51bp | R/R 7.3:1
+  Stop:            49 -> 42bp = -7bp | P&L ~$-2,000
+  Carry: ~$0/month | Margin: ~$12,000
+
+CHARTS:
+  fig7_oil_futures_curve.png -- CL1 vs CL6 backwardation
+  fig8_sensitivity_heatmap.png -- Front-end x TP sensitivity grid
