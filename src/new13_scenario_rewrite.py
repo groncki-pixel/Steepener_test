@@ -528,4 +528,4 @@ with open(results_path, "w") as f:
 print(f"\nResults written to {results_path}")
 print(f"\n{'='*70}")
 print("DONE — Ready for doc integration")
-print(f"{'='*70}")New13 scenario rewrite · PY
+print(f"{'='*70}")
