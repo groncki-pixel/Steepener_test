@@ -29,7 +29,10 @@ import matplotlib.dates as mdates
 import warnings
 warnings.filterwarnings("ignore")
 
-DATA_FILE = "../data/data_steepener.xlsx"
+# Resolve data file relative to THIS script's location, not the working directory
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(_SCRIPT_DIR, "..", "data", "data_steepener.xlsx")
+_OUTPUT_DIR = os.path.join(_SCRIPT_DIR, "..", "output")
 
 NAVY = "#1B2A4A"; ACCENT = "#2E75B6"; RED = "#e74c3c"; GREEN = "#2ecc71"
 PURPLE = "#8e44ad"; ORANGE = "#e67e22"; GRAY = "#bdc3c7"; DGRAY = "#7f8c8d"
@@ -41,7 +44,7 @@ plt.rcParams.update({
     "axes.grid": True, "grid.alpha": 0.3, "grid.linewidth": 0.5,
 })
 
-os.makedirs("../output/pitch_charts", exist_ok=True)
+os.makedirs(os.path.join(_OUTPUT_DIR, "pitch_charts"), exist_ok=True)
 
 # ══════════════════════════════════════════════════════════
 # DATA LOADING
@@ -226,10 +229,10 @@ print(f"""
     Spread impact: +{abs(mispricing_bp) * 0.5:.0f}bp to +{abs(mispricing_bp):.0f}bp steepening
     Timeline: {DAYS_TO_FOMC} days to next FOMC (May 7)
 
-  Catalyst 2: Warsh confirmed → QT acceleration
+  Catalyst 2: Warsh confirmed -> QT acceleration
     Base rate: Every Fed Chair nominee confirmed historically
     Mechanism: TP rises ~{TP_PER_100B:.0f}bp per $100B BS reduction + announcement effect
-    Spread impact: +20bp to +40bp via β(TP) = {BETA_TP:.0f}
+    Spread impact: +20bp to +40bp via B(TP) = {BETA_TP:.0f}
     Timeline: Senate confirmation, likely Q2-Q3
 
   Catalyst 3: Oil normalises toward futures curve
@@ -297,11 +300,11 @@ tp_uplifts = [0, 5, 10, 15, 20, 25]
 
 print(f"\n  Spread outcome (bp) = {entry:.0f}bp + front-end correction + TP steepening")
 print(f"  Entry: {entry:.0f}bp | Stop: {stop}bp | Target: 70bp")
-print(f"\n  {'FE corr →':>12}", end="")
+print(f"\n  {'FE corr ->':>12}", end="")
 for fe in fe_corrections:
     print(f" {fe:>5}bp", end="")
 print()
-print(f"  {'TP ↓':>12}", end="")
+print(f"  {'TP v':>12}", end="")
 for _ in fe_corrections:
     print(f"  {'':>5}", end="")
 print()
@@ -375,9 +378,9 @@ stop_pnl = -2000   # broad risk-off
 
 print(f"""
   Risk/Reward Summary (at {entry:.0f}bp entry):
-    Base target (any two):  {entry:.0f}bp → ~70bp = +{70-entry:.0f}bp  |  P&L: ~$+3,000  |  R/R: {(70-entry)/(entry-stop):.1f}:1
-    Full target (all three): {entry:.0f}bp → ~100bp = +{100-entry:.0f}bp |  P&L: ~$+5,000  |  R/R: {(100-entry)/(entry-stop):.1f}:1
-    Stop loss:              {entry:.0f}bp → {stop}bp = -{entry-stop:.0f}bp  |  P&L: ~$-2,000
+    Base target (any two):  {entry:.0f}bp -> ~70bp = +{70-entry:.0f}bp  |  P&L: ~$+3,000  |  R/R: {(70-entry)/(entry-stop):.1f}:1
+    Full target (all three): {entry:.0f}bp -> ~100bp = +{100-entry:.0f}bp |  P&L: ~$+5,000  |  R/R: {(100-entry)/(entry-stop):.1f}:1
+    Stop loss:              {entry:.0f}bp -> {stop}bp = -{entry-stop:.0f}bp  |  P&L: ~$-2,000
     Monthly carry:          ~$0 (SOFR calendar spread)
     Margin:                 ~$12,000
 
@@ -409,7 +412,7 @@ ax1.fill_between(cl_aligned.index, cl_aligned["CL6"], cl_aligned["CL1"],
                   alpha=0.15, color=ORANGE, label="Backwardation")
 ax1.axvline(pd.Timestamp(PRE_WAR), color=RED, lw=1.5, ls="--", alpha=0.7, label="War start (Feb 27)")
 ax1.set_ylabel("WTI Crude ($/bbl)")
-ax1.set_title("Oil Futures Curve: Market Prices Normalisation\n(CL1 vs CL6 — Dec 2026 Delivery)")
+ax1.set_title("Oil Futures Curve: Market Prices Normalisation\n(CL1 vs CL6 -- Dec 2026 Delivery)")
 ax1.legend(loc="upper left", fontsize=9)
 ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
 ax1.text(0.98, 0.05,
@@ -422,7 +425,7 @@ ax1.text(0.98, 0.05,
 ax2.bar(cl_aligned.index, cl_aligned["backwardation"], color=ORANGE, alpha=0.6, width=1.5)
 ax2.axhline(0, color=DGRAY, lw=1)
 ax2.axvline(pd.Timestamp(PRE_WAR), color=RED, lw=1.5, ls="--", alpha=0.7)
-ax2.set_ylabel("CL1 − CL6 ($)")
+ax2.set_ylabel("CL1 - CL6 ($)")
 ax2.set_xlabel("")
 ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
 ax2.text(0.98, 0.95, "Positive = backwardation\n(market expects oil to fall)",
@@ -430,9 +433,10 @@ ax2.text(0.98, 0.95, "Positive = backwardation\n(market expects oil to fall)",
     bbox=dict(boxstyle="round,pad=0.5", fc="#f0f0f0", ec=GRAY, alpha=0.9))
 
 plt.tight_layout()
-plt.savefig("../output/pitch_charts/fig7_oil_futures_curve.png", dpi=300, bbox_inches="tight")
+chart1_path = os.path.join(_OUTPUT_DIR, "pitch_charts", "fig7_oil_futures_curve.png")
+plt.savefig(chart1_path, dpi=300, bbox_inches="tight")
 plt.close()
-print("  Saved: ../output/pitch_charts/fig7_oil_futures_curve.png")
+print(f"  Saved: {chart1_path}")
 
 # ══════════════════════════════════════════════════════════
 # CHART 2: Sensitivity heatmap
@@ -448,14 +452,14 @@ ax.set_yticks(range(len(tp_uplifts)))
 ax.set_yticklabels([f"+{tp}bp" for tp in tp_uplifts])
 ax.set_xlabel("Front-End Correction (2Y repricing)")
 ax.set_ylabel("Term Premium Steepening (Warsh/QT)")
-ax.set_title(f"Sensitivity Grid: Spread Outcome from {entry:.0f}bp Entry\n(Target ≥70bp, Stop ≤42bp)")
+ax.set_title(f"Sensitivity Grid: Spread Outcome from {entry:.0f}bp Entry\n(Target >=70bp, Stop <=42bp)")
 
 for i in range(len(tp_uplifts)):
     for j in range(len(fe_corrections)):
         val = grid[i, j]
         color = "white" if val >= 70 or val <= 42 else "black"
         weight = "bold" if val >= 70 else "normal"
-        marker = "★" if val >= 70 else ("✗" if val <= 42 else "")
+        marker = "*" if val >= 70 else ("X" if val <= 42 else "")
         ax.text(j, i, f"{val:.0f}{marker}", ha="center", va="center",
                 fontsize=10, color=color, fontweight=weight)
 
@@ -463,24 +467,25 @@ fig.colorbar(im, ax=ax, shrink=0.8, label="Spread Outcome (bp)")
 
 # Add annotation
 ax.text(0.5, -0.18,
-    f"★ = Target reached | ✗ = Stop hit | Entry: {entry:.0f}bp | "
+    f"* = Target reached | X = Stop hit | Entry: {entry:.0f}bp | "
     f"Target hit in {hits_target}/{total_cells} cells ({hits_target/total_cells*100:.0f}%)",
     transform=ax.transAxes, ha="center", fontsize=9, fontstyle="italic")
 
 plt.tight_layout()
-plt.savefig("../output/pitch_charts/fig8_sensitivity_heatmap.png", dpi=300, bbox_inches="tight")
+chart2_path = os.path.join(_OUTPUT_DIR, "pitch_charts", "fig8_sensitivity_heatmap.png")
+plt.savefig(chart2_path, dpi=300, bbox_inches="tight")
 plt.close()
-print("  Saved: ../output/pitch_charts/fig8_sensitivity_heatmap.png")
+print(f"  Saved: {chart2_path}")
 
 # ══════════════════════════════════════════════════════════
 # WRITE TEXT OUTPUT (drop-in for doc section)
 # ══════════════════════════════════════════════════════════
 
-results_path = "../output/new13_scenario_rewrite.txt"
+results_path = os.path.join(_OUTPUT_DIR, "new13_scenario_rewrite.txt")
 with open(results_path, "w") as f:
     f.write(f"Generated: {pd.Timestamp.now():%Y-%m-%d %H:%M}\n")
     f.write("=" * 80 + "\n")
-    f.write("NEW-13: Scenario Analysis — Market-Implied Framework\n")
+    f.write("NEW-13: Scenario Analysis -- Market-Implied Framework\n")
     f.write("=" * 80 + "\n")
     f.write(f"Replaces fabricated probability tree with market-observable pricing.\n\n")
 
@@ -490,42 +495,42 @@ with open(results_path, "w") as f:
     f.write(f"  Implied cuts: {implied_cuts_cur:.1f} (pre-war: {implied_cuts_pre:.1f})\n")
     f.write(f"  2Y move since war: +{d_2y_from_war:.0f}bp with ZERO Fed action\n\n")
 
-    f.write("SECTION 1 — MARKET-IMPLIED PRICING:\n")
+    f.write("SECTION 1 -- MARKET-IMPLIED PRICING:\n")
     f.write(f"  SOFR strip prices {implied_cuts_cur:.1f} cuts (effectively hikes). Pre-war: {implied_cuts_pre:.1f} cuts.\n")
     f.write(f"  Oil curve: ${backwardation_dollar:.2f} backwardation ({backwardation_pct:.0f}%). Market prices normalisation.\n")
     f.write(f"  Fed: FFR unchanged at {ffr_cur:.2f}% despite +{d_2y_from_war:.0f}bp 2Y selloff.\n\n")
 
-    f.write("SECTION 2 — WHERE WE DISAGREE:\n")
+    f.write("SECTION 2 -- WHERE WE DISAGREE:\n")
     f.write(f"  Market prices {implied_cuts_cur:.1f} cuts. We think ~{fair_cuts:.1f} (conditional on transitory oil).\n")
     f.write(f"  Base rate for oil being transitory: {FED_CORE_RATE}/6 (100%).\n")
     f.write(f"  Mispricing: {mispricing_bp:+.0f}bp in the 2Y.\n\n")
 
-    f.write("SECTION 3 — PAYOFF ASYMMETRY:\n")
+    f.write("SECTION 3 -- PAYOFF ASYMMETRY:\n")
     f.write(f"  Catalyst 1: Fed signals transitory ({FED_CORE_RATE}/6 base rate)\n")
     f.write(f"  Catalyst 2: Warsh confirmed (every nominee confirmed historically)\n")
     f.write(f"  Catalyst 3: Oil normalises (futures curve prices {backwardation_pct:.0f}% decline)\n")
     f.write(f"  ANY ONE reaches target. ALL THREE must fail for stop.\n\n")
 
-    f.write("SECTION 4 — BREAKEVEN:\n")
+    f.write("SECTION 4 -- BREAKEVEN:\n")
     f.write(f"  Entry: {entry:.0f}bp | Stop: {stop}bp | Target: 70bp\n")
     f.write(f"  Distance to stop: {distance_to_stop:.0f}bp | Distance to target: {distance_to_target:.0f}bp\n")
     f.write(f"  R/R: {distance_to_target/distance_to_stop:.1f}:1\n\n")
 
-    f.write("SECTION 5 — SENSITIVITY:\n")
+    f.write("SECTION 5 -- SENSITIVITY:\n")
     f.write(f"  Target reached in {hits_target}/{total_cells} cells ({hits_target/total_cells*100:.0f}%)\n")
     f.write(f"  Stop hit in {hits_stop}/{total_cells} cells ({hits_stop/total_cells*100:.0f}%)\n\n")
 
-    f.write("SECTION 6 — RISK/REWARD:\n")
-    f.write(f"  Base (any two):  {entry:.0f} → 70bp = +{70-entry:.0f}bp | R/R {(70-entry)/(entry-stop):.1f}:1\n")
-    f.write(f"  Full (all three): {entry:.0f} → 100bp = +{100-entry:.0f}bp | R/R {(100-entry)/(entry-stop):.1f}:1\n")
-    f.write(f"  Stop:            {entry:.0f} → {stop}bp = -{entry-stop:.0f}bp | P&L ~$-2,000\n")
+    f.write("SECTION 6 -- RISK/REWARD:\n")
+    f.write(f"  Base (any two):  {entry:.0f} -> 70bp = +{70-entry:.0f}bp | R/R {(70-entry)/(entry-stop):.1f}:1\n")
+    f.write(f"  Full (all three): {entry:.0f} -> 100bp = +{100-entry:.0f}bp | R/R {(100-entry)/(entry-stop):.1f}:1\n")
+    f.write(f"  Stop:            {entry:.0f} -> {stop}bp = -{entry-stop:.0f}bp | P&L ~$-2,000\n")
     f.write(f"  Carry: ~$0/month | Margin: ~$12,000\n\n")
 
     f.write("CHARTS:\n")
-    f.write(f"  fig7_oil_futures_curve.png — CL1 vs CL6 backwardation\n")
-    f.write(f"  fig8_sensitivity_heatmap.png — Front-end × TP sensitivity grid\n")
+    f.write(f"  fig7_oil_futures_curve.png -- CL1 vs CL6 backwardation\n")
+    f.write(f"  fig8_sensitivity_heatmap.png -- Front-end x TP sensitivity grid\n")
 
 print(f"\nResults written to {results_path}")
 print(f"\n{'='*70}")
-print("DONE — Ready for doc integration")
+print("DONE -- Ready for doc integration")
 print(f"{'='*70}")
