@@ -16,7 +16,8 @@ Uses: CL1, CL6, UST 2y, UST 10y, US 2yr10yr spread, Fed Funds Rate
       + prior analysis results (NEW-1 through NEW-12)
 
 Output: ../output/new13_scenario_rewrite.txt (drop-in text for doc)
-        ../output/pitch_charts/fig6_market_implied_scenario.png
+        ../output/pitch_charts/fig7_oil_futures_curve.png
+        ../output/pitch_charts/fig8_sensitivity_heatmap.png
 """
 
 import os
@@ -81,6 +82,8 @@ def gn(s, d):
     return s.iloc[idx], s.index[idx]
 
 print("Loading data...")
+print(f"  Data file: {os.path.abspath(DATA_FILE)}")
+print(f"  Output dir: {os.path.abspath(_OUTPUT_DIR)}")
 cl1 = load_cl("CL1")
 cl6 = load_cl("CL6")
 ust2y = load_bbg("UST 2 y")
@@ -395,7 +398,7 @@ print(f"""
 # CHART: Oil Futures Curve + Market-Implied Normalisation
 # ══════════════════════════════════════════════════════════
 
-print("Generating chart...")
+print("Generating charts...")
 
 # Align CL1 and CL6
 cl_aligned = pd.DataFrame({"CL1": cl1, "CL6": cl6}).dropna()
